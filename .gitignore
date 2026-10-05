@@ -1,0 +1,9 @@
+.DS_Store
+*.log
+__pycache__/
+*.pyc
+.env
+.idea/
+.vscode/
+build/
+.dart_tool/
