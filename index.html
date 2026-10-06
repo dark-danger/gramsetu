@@ -30,8 +30,9 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <link rel="apple-touch-icon" href="icon-192.png">
   <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
-  <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
-  <link rel="stylesheet" href="styles.css?v=4.0">
+  <script>
+    document.write('<link rel="stylesheet" href="styles.css?t=' + Date.now() + '">');
+  </script>
 </head>
 <body>
 
@@ -74,18 +75,21 @@
           <div class="history-entry" onclick="loadSamplePrompt('Convert 1 Acre to Pucca Bigha, Kaccha Bigha and Square Yards')">
             <span class="entry-title">1 Acre to Bigha conversion</span>
           </div>
+          <div class="history-entry" onclick="openMemoryModal()">
+            <span class="entry-title">🧠 View & Edit AI Memory</span>
+          </div>
         </div>
       </div>
 
-      <!-- Sidebar Footer (GRAM Setu Model Info) -->
+      <!-- Sidebar Footer (GRAM Setu Model Info & Memory) -->
       <div class="sidebar-footer">
-        <div class="user-profile-row">
+        <div class="user-profile-row" onclick="openMemoryModal()" style="cursor: pointer;" title="Open AI Memory & Personalization">
           <div class="user-avatar-badge">G</div>
           <div class="user-profile-info">
             <div class="user-name">GRAM Setu AI</div>
-            <div class="user-plan">Qwen 2.5 (1.5B Local)</div>
+            <div class="user-plan" id="sidebarEngineStatus">Qwen 2.5 • Reasoning Active</div>
           </div>
-          <div class="engine-live-dot" title="Local Ollama Active"></div>
+          <div class="engine-live-dot" title="AI Memory & Engine Active"></div>
         </div>
       </div>
 
@@ -124,6 +128,16 @@
         </div>
 
         <div class="top-nav-right">
+          <!-- Deep Reasoning Toggle -->
+          <button class="deep-think-toggle-btn active" id="deepThinkToggleBtn" onclick="toggleDeepReasoning()" title="Toggle Chain-of-Thought Deep Reasoning">
+            <span class="think-dot"></span>
+            <span>🧠 Deep Think</span>
+          </button>
+
+          <button class="nav-icon-btn" onclick="openMemoryModal()" title="AI Memory & Preferences">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a7 7 0 0 0-7 7c0 2.38 1.19 4.47 3 5.74V17a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2v-2.26c1.81-1.27 3-3.36 3-5.74a7 7 0 0 0-7-7z"/><path d="M9 21h6"/></svg>
+          </button>
+
           <button class="nav-icon-btn" onclick="createNewChat()" title="New chat">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
           </button>
@@ -154,19 +168,19 @@
               </div>
             </button>
 
-            <button class="suggestion-card" onclick="sendSuggestion('What are the immediate emergency first aid steps for a snake bite and electric shock?')">
-              <div class="sugg-icon">🩺</div>
+            <button class="suggestion-card" onclick="sendSuggestion('How many Pucca Bigha, Kaccha Bigha, and Square Yards are in 3.5 Acres of land? Calculate fertilizer bags needed.')">
+              <div class="sugg-icon">📐</div>
               <div class="sugg-text">
-                <div class="sugg-title">Emergency First Aid</div>
-                <div class="sugg-desc">Life-saving DOs & DON\'Ts for snake bites and CPR</div>
+                <div class="sugg-title">3.5 Acre Land & Fertilizer Math</div>
+                <div class="sugg-desc">Precise Bigha conversion & DAP/Urea bag formula</div>
               </div>
             </button>
 
-            <button class="suggestion-card" onclick="sendSuggestion('How many Pucca Bigha, Kaccha Bigha, and Square Yards are in 1 Acre of land?')">
-              <div class="sugg-icon">📐</div>
+            <button class="suggestion-card" onclick="sendSuggestion('/image organic compost preparation step by step diagram with worm bed')">
+              <div class="sugg-icon">🎨</div>
               <div class="sugg-text">
-                <div class="sugg-title">Land & Fertilizer Math</div>
-                <div class="sugg-desc">Acre to Bigha conversion and DAP/Urea bag formula</div>
+                <div class="sugg-title">Generate AI Visual Poster</div>
+                <div class="sugg-desc">Organic farming, soil health & drip irrigation visuals</div>
               </div>
             </button>
           </div>
@@ -195,13 +209,16 @@
           <textarea 
             id="chatInput" 
             class="chat-input-textarea" 
-            placeholder="Message GRAM Setu..." 
+            placeholder="Message GRAM Setu (Ask questions, math, code, or type /image prompt)..." 
             rows="1"
             oninput="handleInputResize(this)"
             onkeydown="handleInputKey(event)"
           ></textarea>
 
           <div class="input-actions-group">
+            <button class="image-gen-btn" id="imageGenBtn" onclick="triggerImagePrompt()" title="Generate AI Image / Visual">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            </button>
             <button class="icon-circle-btn" id="micBtn" onclick="toggleMic()" title="Voice input">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
             </button>
@@ -213,7 +230,7 @@
         </div>
 
         <div class="chat-footer-note">
-          GRAM Setu can make mistakes. Check important info.
+          🧠 Advanced Reasoning & Memory Active • GramSetu AI can solve multi-step problems.
         </div>
       </div>
 
@@ -221,7 +238,73 @@
 
   </div>
 
-  <script src="knowledge_data.js?v=3.0"></script>
-  <script src="app.js?v=3.0"></script>
+  <!-- ==================== 🧠 AI MEMORY & PERSONALIZATION MODAL ==================== -->
+  <div class="modal-backdrop" id="memoryModal">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#a855f7" stroke-width="2"><path d="M12 2a7 7 0 0 0-7 7c0 2.38 1.19 4.47 3 5.74V17a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2v-2.26c1.81-1.27 3-3.36 3-5.74a7 7 0 0 0-7-7z"/><path d="M9 21h6"/></svg>
+          <span class="modal-title">AI Memory & User Profile</span>
+        </div>
+        <button class="modal-close-btn" onclick="closeMemoryModal()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="form-label">User Location / State & District</label>
+          <input type="text" id="memoryLocationInput" class="form-input" placeholder="e.g. Karnal, Haryana (India)" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Primary Crop / Domain Focus</label>
+          <input type="text" id="memoryCropInput" class="form-input" placeholder="e.g. Wheat & Mustard farming / Python Developer" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Land Size / Measurement Preference</label>
+          <input type="text" id="memoryLandInput" class="form-input" placeholder="e.g. 4.5 Acres (Pucca Bigha)" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Preferred Response Language & Tone</label>
+          <select id="memoryLangInput" class="form-select">
+            <option value="auto">Auto-Detect (Hindi / Hinglish / English)</option>
+            <option value="hindi">Hindi (हिंदी में उत्तर)</option>
+            <option value="hinglish">Hinglish (रोमन हिंदी / बोलचाल)</option>
+            <option value="english">Clear English</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Active Auto-Remembered Context Facts</label>
+          <div class="memory-items-list" id="memoryListContainer">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="modal-btn secondary" onclick="clearAllMemories()">Clear Memory</button>
+        <button class="modal-btn primary" onclick="saveUserProfileMemory()">Save Preferences</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dynamic Zero-Cache Script Loader -->
+  <script>
+    (function() {
+      const ts = Date.now();
+      
+      const s1 = document.createElement('script');
+      s1.src = 'knowledge_data.js?t=' + ts;
+      document.body.appendChild(s1);
+
+      const s2 = document.createElement('script');
+      s2.src = 'app.js?t=' + ts;
+      document.body.appendChild(s2);
+    })();
+  </script>
 </body>
 </html>

@@ -315,12 +315,18 @@ function searchOfflineKnowledge(query, historyContext) {
     expandedTerms.push("pm kisan", "scheme");
   }
 
-  var fullSearchString = qRaw + " " + expandedTerms.join(" ");
-  if (historyContext) {
-    fullSearchString += " " + historyContext.toLowerCase();
+  var fullSearchString = qRaw;
+  
+  // Only expand terms if explicit agricultural or scheme intent exists in CURRENT query
+  if (/(gehu|wheat|dhan|rice|sarson|mustard|crop|fasal|farming|kheti|khad|fertilizer|dap|urea|yojana|yojna|pm kisan|ayushman|snake|saanp|first aid|bigha|acre)/i.test(qRaw)) {
+    fullSearchString += " " + expandedTerms.join(" ");
+  } else {
+    // If it's a general / casual conversational query, do not force RAG matching
+    return null;
   }
 
-  var words = fullSearchString.split(/\s+/).filter(function(w) { return w.length > 1; });
+  var words = qRaw.split(/\s+/).filter(function(w) { return w.length > 2; });
+  if (words.length === 0) return null;
 
   var bestMatch = null;
   var bestScore = 0;
@@ -330,27 +336,22 @@ function searchOfflineKnowledge(query, historyContext) {
     var score = 0;
     
     // Direct title match
-    if (item.title.toLowerCase().indexOf(qRaw) !== -1) score += 50;
+    if (item.title.toLowerCase().indexOf(qRaw) !== -1) score += 60;
 
     // Keywords match
     for (var k = 0; k < item.keywords.length; k++) {
       var kw = item.keywords[k].toLowerCase();
-      if (qRaw.indexOf(kw) !== -1 || fullSearchString.indexOf(kw) !== -1) {
-        score += 35;
+      if (qRaw.indexOf(kw) !== -1) {
+        score += 40;
       }
       for (var w = 0; w < words.length; w++) {
         var word = words[w];
-        if (kw.indexOf(word) !== -1 || word.indexOf(kw) !== -1) {
-          score += 15;
+        if (kw === word) {
+          score += 25;
+        } else if (kw.indexOf(word) !== -1 && word.length > 3) {
+          score += 10;
         }
       }
-    }
-
-    // Summary & tags match
-    for (var w2 = 0; w2 < words.length; w2++) {
-      var word2 = words[w2];
-      if (item.summary.toLowerCase().indexOf(word2) !== -1) score += 8;
-      if (item.response.toLowerCase().indexOf(word2) !== -1) score += 2;
     }
 
     if (score > bestScore) {
@@ -359,7 +360,7 @@ function searchOfflineKnowledge(query, historyContext) {
     }
   }
 
-  return bestScore >= 15 ? bestMatch : null;
+  return bestScore >= 45 ? bestMatch : null;
 }
 
 if (typeof module !== 'undefined') {

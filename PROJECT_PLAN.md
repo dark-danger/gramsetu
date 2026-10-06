@@ -23,35 +23,50 @@
 
 ```
 +-------------------------------------------------------------------------------+
-|                             FLUTTER MOBILE CLIENT                             |
+|                             FLUTTER MOBILE & WEB CLIENT                       |
 |  +---------------------------+  +------------------------------------------+  |
-|  |    Voice UI / Mic Input   |  |        Visual Categories & Chat          |  |
-|  | (Bilingual Hindi/English) |  |   (Kisan, Health, Schemes, General Q&A)  |  |
+|  |  Voice UI / Mic Input     |  |  Reasoning Dashboard & Chat Interface    |  |
+|  |  (Bilingual Hi / En)      |  |  (🧠 Deep Think • 🎨 Image Studio • RAG) |  |
 |  +-------------+-------------+  +--------------------+---------------------+  |
 +----------------|-------------------------------------|------------------------+
                  | (Audio stream)                      | (Text query)
                  v                                     v
 +--------------------------------+   +------------------------------------------+
-|      OFFLINE SPEECH ENGINE     |   |         LOCAL RAG QUERY ROUTER           |
-| • Sherpa-ONNX / Whisper-tiny   |   | • SQLite with FTS5 / SQLite-Vec          |
-| • On-device ASR (Hindi/Indian) |-->| • 50+ Curated Govt Schemes & Agri Guides |
-+--------------------------------+   +--------------------+---------------------+
+|      OFFLINE SPEECH ENGINE     |   |     🧠 ADVANCED AI REASONING & ROUTER    |
+| • Sherpa-ONNX / Whisper-tiny   |   | • 1. Context & Multi-Turn Understanding  |
+| • On-device ASR (Hindi/Indian) |-->| • 2. Chain-of-Thought (CoT) Breakdown   |
++--------------------------------+   | • 3. Instruction Following & Adaptive Tone|
+                                     +--------------------+---------------------+
                                                           |
-                                                          | (Augmented Prompt + Context)
+                               +--------------------------+--------------------------+
+                               |                                                     |
+                               v                                                     v
++----------------------------------------------+   +---------------------------------------------+
+|    💾 DYNAMIC MEMORY & CONVERSATIONAL LAYER  |   |        🛠️ AGENTIC TOOLS ECOSYSTEM           |
+| • In-Context Working Memory (Sliding Buffer) |   | • AgriMath Resolver (Acre ⇄ Bigha / Gaj)    |
+| • Semantic Long-Term Fact Store (LocalStorage|   | • Scientific Fertilizer & DAP/Urea Bags Calc|
+| • User Profile & Preferences (Land/Crops/Loc)|   | • Verified Offline RAG Knowledge Base       |
+| • Zero-Latency Dynamic Prompt Injection      |   | • 🎨 AI Visual Image Studio (Pollinations)  |
++----------------------------------------------+   +---------------------------------------------+
+                               |                                                     |
+                               +--------------------------+--------------------------+
+                                                          |
+                                                          | (Augmented Reasoning Prompt + Memory)
                                                           v
                                      +------------------------------------------+
                                      |         ON-DEVICE LLM INFERENCE          |
                                      | • Qwen 2.5 (1.5B-Instruct GGUF Q4_K_M)   |
-                                     | • Embedded llama.cpp / NDK Native Engine |
+                                     | • Embedded llama.cpp / Ollama Engine     |
                                      | • RAM Footprint: ~1.1 GB | ~15 tokens/s  |
                                      +--------------------+---------------------+
                                                           |
-                                                          | (Generated Response)
+                                                          | (Streamed Output + <think> CoT)
                                                           v
                                      +------------------------------------------+
                                      |         OFFLINE AUDIO & DISPLAY          |
+                                     | • Collapsible Thinking Accordion (<think>)|
                                      | • Android Native TTS (hi-IN / en-IN)     |
-                                     | • Interactive UI Message with Audio Play |
+                                     | • Interactive Tool Pills & Image Cards   |
                                      +------------------------------------------+
 ```
 
