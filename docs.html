@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GramSetu AI - Master Technical & Concept Documentation</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@500;600;700;800;900&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --primary: #059669;
+      --primary-dark: #065f46;
+      --primary-light: #10b981;
+      --accent: #f59e0b;
+      --accent-blue: #0284c7;
+      --accent-purple: #7c3aed;
+      --dark: #0f172a;
+      --dark-card: #1e293b;
+      --text: #334155;
+      --text-light: #64748b;
+      --bg: #f8fafc;
+      --white: #ffffff;
+      --border: #e2e8f0;
+      --border-dark: #334155;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+      font-size: 14px;
+    }
+
+    h1, h2, h3, h4, h5 {
+      font-family: 'Outfit', sans-serif;
+      color: var(--dark);
+      font-weight: 700;
+    }
+
+    /* Print styling */
+    @page {
+      size: A4 portrait;
+      margin: 12mm 14mm 12mm 14mm;
+    }
+
+    @media print {
+      body {
+        background: #ffffff;
+        font-size: 11.5px;
+        color: #0f172a;
+      }
+      .no-print {
+        display: none !important;
+      }
+      .doc-container {
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+      }
+      .page-break {
+        page-break-before: always;
+      }
+      .concept-card, .section-box {
+        page-break-inside: avoid;
+        box-shadow: none !important;
+        border: 1px solid #cbd5e1 !important;
+      }
+      .header-hero {
+        background: #065f46 !important;
+        color: #ffffff !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+    }
+
+    /* Top Floating Action Bar */
+    .top-bar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(15, 23, 42, 0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 12px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: white;
+    }
+
+    .top-bar-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: 'Outfit', sans-serif;
+      font-weight: 700;
+      font-size: 17px;
+      color: #34d399;
+    }
+
+    .action-btn-group {
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      border: none;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: white;
+      box-shadow: 0 2px 10px rgba(16, 185, 129, 0.3);
+    }
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #059669, #047857);
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.12);
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    /* Main Container */
+    .doc-container {
+      max-width: 960px;
+      margin: 24px auto 60px;
+      padding: 0 20px;
+    }
+
+    /* Hero Header */
+    .header-hero {
+      background: linear-gradient(135deg, #064e3b 0%, #065f46 40%, #0d9488 100%);
+      color: white;
+      padding: 36px 32px;
+      border-radius: 20px;
+      box-shadow: 0 10px 25px -5px rgba(6, 78, 59, 0.25);
+      margin-bottom: 28px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .header-hero::after {
+      content: "3B";
+      position: absolute;
+      right: 20px;
+      bottom: -15px;
+      font-family: 'Outfit', sans-serif;
+      font-size: 140px;
+      font-weight: 900;
+      color: rgba(255, 255, 255, 0.05);
+      pointer-events: none;
+    }
+
+    .header-hero h1 {
+      font-size: 32px;
+      color: #ffffff;
+      margin-bottom: 6px;
+      letter-spacing: -0.5px;
+    }
+
+    .header-hero .subtitle {
+      font-size: 16px;
+      color: #a7f3d0;
+      margin-bottom: 18px;
+      font-weight: 500;
+    }
+
+    .badge-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .hero-badge {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      color: #f0fdf4;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 5px 12px;
+      border-radius: 30px;
+    }
+
+    /* Section Cards */
+    .section-box {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px 26px;
+      margin-bottom: 24px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.04);
+    }
+
+    .section-head {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #f1f5f9;
+    }
+
+    .section-num {
+      background: linear-gradient(135deg, #059669, #047857);
+      color: white;
+      font-family: 'Outfit', sans-serif;
+      font-weight: 800;
+      font-size: 13px;
+      padding: 4px 10px;
+      border-radius: 8px;
+      letter-spacing: 0.5px;
+    }
+
+    .section-head h2 {
+      font-size: 20px;
+      color: var(--dark);
+    }
+
+    /* Detailed Concept Cards */
+    .concept-card {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-left: 5px solid var(--primary);
+      border-radius: 12px;
+      padding: 16px 20px;
+      margin-bottom: 16px;
+      transition: all 0.2s ease;
+    }
+
+    .concept-card:hover {
+      border-color: #cbd5e1;
+      background: #ffffff;
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.04);
+    }
+
+    .concept-card.blue {
+      border-left-color: var(--accent-blue);
+    }
+    .concept-card.amber {
+      border-left-color: var(--accent);
+    }
+    .concept-card.purple {
+      border-left-color: var(--accent-purple);
+    }
+
+    .concept-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--dark);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .concept-analogy {
+      background: #fef9c3;
+      border: 1px dashed #ca8a04;
+      color: #713f12;
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 12.5px;
+      margin: 10px 0;
+    }
+
+    .concept-analogy strong {
+      color: #854d0e;
+    }
+
+    /* Grid layout */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin: 14px 0;
+    }
+
+    @media (max-width: 768px) {
+      .grid-2 {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .grid-card {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 16px;
+    }
+
+    .grid-card h4 {
+      color: var(--primary-dark);
+      margin-bottom: 6px;
+      font-size: 14.5px;
+    }
+
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+      font-size: 13px;
+    }
+
+    th, td {
+      padding: 10px 14px;
+      text-align: left;
+      border: 1px solid var(--border);
+    }
+
+    th {
+      background: #f1f5f9;
+      color: var(--dark);
+      font-weight: 700;
+    }
+
+    tr:nth-child(even) {
+      background: #fcfcfd;
+    }
+
+    /* Code & ASCII Diagrams */
+    pre, .diagram-box {
+      background: #0f172a;
+      color: #38bdf8;
+      font-family: 'Fira Code', monospace;
+      font-size: 12px;
+      padding: 16px 18px;
+      border-radius: 12px;
+      overflow-x: auto;
+      line-height: 1.5;
+      margin: 14px 0;
+    }
+
+    code {
+      font-family: 'Fira Code', monospace;
+      background: #e2e8f0;
+      color: #0f172a;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 12px;
+    }
+
+    /* Pills & Badges */
+    .pill {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 11.5px;
+      font-weight: 600;
+    }
+    .pill-green { background: #dcfce7; color: #166534; }
+    .pill-blue { background: #e0f2fe; color: #0369a1; }
+    .pill-amber { background: #fef3c7; color: #92400e; }
+    .pill-purple { background: #f3e8ff; color: #6b21a8; }
+
+    ul, ol {
+      margin-left: 22px;
+      margin-bottom: 12px;
+    }
+
+    li {
+      margin-bottom: 5px;
+    }
+
+    .footer {
+      text-align: center;
+      padding: 24px;
+      color: #94a3b8;
+      font-size: 12px;
+      border-top: 1px solid #e2e8f0;
+      margin-top: 40px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- FLOATING TOP BAR FOR DOWNLOAD & NAVIGATION -->
+  <div class="top-bar no-print">
+    <div class="top-bar-title">
+      <span>🌾 GramSetu AI</span>
+      <span style="font-size:12px; background:rgba(255,255,255,0.15); padding:2px 8px; border-radius:12px; color:white;">Master Docs</span>
+    </div>
+    <div class="action-btn-group">
+      <a href="/" class="btn btn-secondary">💬 Open Live App</a>
+      <button onclick="window.print()" class="btn btn-primary">🖨️ Print / Download PDF</button>
+    </div>
+  </div>
+
+  <div class="doc-container">
+
+    <!-- HERO HEADER -->
+    <div class="header-hero">
+      <h1>GramSetu AI (ग्रामसेतु AI)</h1>
+      <div class="subtitle">Complete Technical Guide, Conceptual Breakdown & Presentation Companion</div>
+      <div class="badge-bar">
+        <span class="hero-badge">🧠 Model: Qwen 2.5 (3B-Instruct)</span>
+        <span class="hero-badge">💾 Memory: Deterministic SQLite</span>
+        <span class="hero-badge">📚 Knowledge: Curated Offline RAG</span>
+        <span class="hero-badge">⚡ Architecture: Edge Air-Gapped AI</span>
+        <span class="hero-badge">📱 Platform: Web PWA + Flutter</span>
+      </div>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- SECTION 1: DETAILED CONCEPT BREAKDOWN -->
+    <!-- ========================================================================= -->
+    <div class="section-box">
+      <div class="section-head">
+        <span class="section-num">PART 1</span>
+        <h2>Basic Se Advanced Concepts (Kya Cheez Kya Hoti Hai?)</h2>
+      </div>
+
+      <!-- CONCEPT 1: Qwen 2.5 3B -->
+      <div class="concept-card">
+        <div class="concept-title">
+          <span>🤖 1. Qwen 2.5 3B Kya Hai? (Model Breakdown)</span>
+          <span class="pill pill-green">AI Foundation</span>
+        </div>
+        <p><strong>"Qwen 2.5 3B"</strong> ka naam 3 hisso se milkar bana hai:</p>
+        <ul>
+          <li><strong>Qwen (Alibaba Cloud LLM Family):</strong> Yeh duniya ke sabse powerful open-weights Large Language Models me se ek hai. Iski Hindi, Hinglish, Chinese aur English understanding baki standard models se kafi behtar hoti hai.</li>
+          <li><strong>2.5 (Version):</strong> Qwen ka latest Generation 2.5 upgrade, jisme advance mathematics, coding aur structured reasoning capabilities shamil hain.</li>
+          <li><strong>3B (3 Billion Parameters):</strong> Iska matlab hai ki is model ke artificial neural network me <strong>300 Crore (3,000,000,000) digital connections / neurons</strong> hain jo sawal samajhne aur jawab banane me kaam karte hain.</li>
+        </ul>
+
+        <div class="concept-analogy">
+          <strong>💡 Asaan Example (Analogy):</strong> Jaise insaan ke dimag me neurons hote hain, waise hi LLM me parameters hote hain. 
+          <ul>
+            <li><strong>0.5B (50 Crore Parameters):</strong> Chota dimag — bohot fast, lekin reasoning kamzor.</li>
+            <li><strong>1.5B (150 Crore Parameters):</strong> Medium — mobile par smoothly chalta hai par lambi baato me confuse ho sakta hai.</li>
+            <li><strong>3B (300 Crore Parameters) [GramSetu Choice]:</strong> <em>Sweet Spot!</em> Laptop aur high-end mobile par offline chalta hai (~1.9 GB RAM) aur razor-sharp logic deliver karta hai.</li>
+            <li><strong>70B (7000 Crore Parameters):</strong> Supercomputer chahiye — gaon me offline chalana namumkin hai.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- CONCEPT 2: Quantization & GGUF -->
+      <div class="concept-card blue">
+        <div class="concept-title">
+          <span>📦 2. Quantization & GGUF Format Kya Hai?</span>
+          <span class="pill pill-blue">Compression Tech</span>
+        </div>
+        <p>Raw 3B model ka size lagbhag <strong>6 GB se 8 GB</strong> hota hai (16-bit Float precision). Isko aam laptop ya mobile ke 2-3 GB RAM me chalane ke liye <strong>Quantization (Q4_K_M)</strong> kiya jata hai.</p>
+        <ul>
+          <li><strong>Quantization:</strong> Har parameter ke heavy 16-bit float numbers ko 4-bit integer me compress kiya jata hai bina uski akalmandi (accuracy) khoye.</li>
+          <li><strong>GGUF Format:</strong> <code>llama.cpp</code> aur Ollama ka standard single-file format jisme model weights, vocabulary aur metadata ek hi file me pack hote hain.</li>
+          <li><strong>Benefit:</strong> Model ka size 6 GB se ghatkar sirf <strong>1.9 GB</strong> reh jata hai, aur response speed 3x fast ho jati hai!</li>
+        </ul>
+        <div class="concept-analogy">
+          <strong>💡 Asaan Example:</strong> Jaise 50 MB ka uncompressed WAV audio gaana MP3 me compress hone ke baad 4 MB ka ho jata hai par sunne me bilkul saaf lagta hai — waise hi Quantization AI model ko chota aur tez bana deta hai!
+        </div>
+      </div>
+
+      <!-- CONCEPT 3: Deterministic Memory vs LLM Memory -->
+      <div class="concept-card amber">
+        <div class="concept-title">
+          <span>💾 3. Deterministic Memory (SQLite) Kya Hai Aur Kyu Zaroori Hai?</span>
+          <span class="pill pill-amber">Zero Hallucination</span>
+        </div>
+        <p>Aam ChatGPT ya LLMs "Probabilistic" (andaza lagane wale) hote hain. Agar aap 5 din baad puchenge *"Mera naam kya hai"*, to AI bhool sakta hai ya galat andaza laga sakta hai.</p>
+        <ul>
+          <li><strong>Deterministic Storage:</strong> GramSetu AI ek local <strong>SQLite Database (<code>gramsetu.db</code>)</strong> maintain karta hai.</li>
+          <li>Jab user bolta hai: <em>"Yash naam hai mera aur 4 acre zameen hai"</em>, to system backend me exact entry karta hai: <code>user_name = "Yash"</code>, <code>land_area = "4 acre"</code>.</li>
+          <li>Jab user puchta hai <em>"Mera naam kya hai?"</em>, to AI model se andaza nahi lagwata, balki direct SQLite se 100% verified fact read karke <strong>"Yash."</strong> return karta hai — **Zero Chance of Wrong Answer!**</li>
+        </ul>
+      </div>
+
+      <!-- CONCEPT 4: RAG -->
+      <div class="concept-card purple">
+        <div class="concept-title">
+          <span>📚 4. Offline RAG (Retrieval-Augmented Generation) Kya Hai?</span>
+          <span class="pill pill-purple">Knowledge Engine</span>
+        </div>
+        <p>RAG ka matlab hai AI ko pehle se sahi kitabo ya verified documents ka access dena taki wo man-ghadant (hallucinated) jawab na de.</p>
+        <ul>
+          <li><strong>Problem:</strong> AI model se pucho <em>"KCC ka byaj kitna hai?"</em> to wo purana ya galat rate (jaise 9% ya 12%) bol sakta hai.</li>
+          <li><strong>GramSetu RAG Solution:</strong> Humne verified Sarkari Scheme aur Agriculture scientific guidelines (KCC 4% rate, PMFBY 1.5% Rabi premium, Wheat CRI stage 20-25 days) ko local structured database me feed kiya hai.</li>
+          <li>Sawal aane par pehle local knowledge search hoti hai aur verified fact user ko diya jata hai.</li>
+        </ul>
+        <div class="concept-analogy">
+          <strong>💡 Asaan Example:</strong> RAG ek <strong>Open-Book Exam</strong> ki tarah hai. Student (LLM) ko tukka marne ki zaroorat nahi hai, uske paas verified textbook (RAG) khuli hui hai jahan se wo dekh kar exact sach bolta hai!
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- SECTION 2: SYSTEM ARCHITECTURE & DATA FLOW -->
+    <!-- ========================================================================= -->
+    <div class="section-box page-break">
+      <div class="section-head">
+        <span class="section-num">PART 2</span>
+        <h2>Complete System Architecture & Data Pipeline</h2>
+      </div>
+
+      <p>GramSetu AI ka end-to-end request processing flow 6 scientific stages me structured hai:</p>
+
+      <div class="diagram-box">
+┌──────────────────────────────────────────────────────────────────────────────┐
+│                  STAGE 1: MULTIMODAL CLIENT (Web PWA / Flutter)              │
+│       • Voice Input (Mic)  •  Hinglish/Hindi Text  •  Deep Think Panel       │
+└──────────────────────────────────────┬───────────────────────────────────────┘
+                                       │ (Prompt: "gehu me pehla pani kab de")
+                                       ▼
+┌──────────────────────────────────────────────────────────────────────────────┐
+│                  STAGE 2: DETERMINISTIC PREPROCESSING & ROUTER               │
+│ • Language Engine: Input script (Hinglish) ➔ Output target (Hinglish/Hindi)  │
+│ • Intent Classifier: Agriculture / Scheme / Medical / Math / Memory Query   │
+│ • Tone Detector: Urgent Safety / Casual Friendly / Technical / Formal        │
+└──────────────────────────────────────┬───────────────────────────────────────┘
+                                       │
+        ┌──────────────────────────────┴──────────────────────────────┐
+        ▼                                                             ▼
+┌──────────────────────────────┐              ┌────────────────────────────────┐
+│  STAGE 3: SQLite MEMORY      │              │  STAGE 4: AGENT TOOLS & RAG    │
+│ • User: "Yash"               │              │ • AgriMath Calculator (Acres)  │
+│ • Land: "4 acre"             │              │ • Curated Ground-Truth RAG     │
+│ • Pronoun Context Resolver   │              │   (KCC, PMFBY, Wheat CRI Stage)│
+└──────────────────────────────┘              └────────────────────────────────┘
+        │                                                             │
+        └──────────────────────────────┬──────────────────────────────┘
+                                       │ (Enriched Grounded Prompt)
+                                       ▼
+┌──────────────────────────────────────────────────────────────────────────────┐
+│                  STAGE 5: ON-DEVICE LLM INFERENCE ENGINE                     │
+│ • Qwen 2.5 (3B-Instruct) via Local Ollama Bridge (localhost:11434)           │
+│ • Low Temp (0.15) + High Repeat Penalty (1.45) ➔ Zero Gibberish / No Looping │
+│ • Strictly To-The-Point Rules: 2-4 Crisp Bullet Points                       │
+└──────────────────────────────────────┬───────────────────────────────────────┘
+                                       │ (Chunked Stream Tokens)
+                                       ▼
+┌──────────────────────────────────────────────────────────────────────────────┐
+│                  STAGE 6: POST-PROCESSING & SANITIZATION                     │
+│ • Repetition Breaker & Dedup ➔ Collapsible &lt;think&gt; ➔ Local Audio TTS Voice  │
+└──────────────────────────────────────────────────────────────────────────────┘
+      </div>
+
+      <div class="grid-2">
+        <div class="grid-card">
+          <h4>⚡ Low Temperature (0.15) Kyu?</h4>
+          <p>High temperature (0.7+) model ko kahaniyan banane deta hai. Hamara temperature <strong>0.15</strong> hai jo model ko strictly factual aur accurate rakhta hai.</p>
+        </div>
+        <div class="grid-card">
+          <h4>🛡️ High Repeat Penalty (1.45) Kyu?</h4>
+          <p>Small models aksar ek hi line ko bar-bar repeat karne lagte hain. <strong>1.45 penalty</strong> kisi bhi line ya bullet point ko repeat hone se 100% block karti hai.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- SECTION 3: DOMAIN MODULES & AGENT TOOLS -->
+    <!-- ========================================================================= -->
+    <div class="section-box">
+      <div class="section-head">
+        <span class="section-num">PART 3</span>
+        <h2>Core Rural Modules & Verified Capabilities</h2>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Module Name</th>
+            <th>Primary Real-World Function</th>
+            <th>Verified Knowledge / Math Output</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>🌾 Kisan Mitra (Agriculture)</strong></td>
+            <td>Crop cycle, seed rate, fertilizer dosage, irrigation and pest control.</td>
+            <td>
+              • <strong>Gehu (Wheat):</strong> 40-45 kg/acre seed, 1 bag DAP, 2 bags Urea, 10kg Zinc.<br>
+              • <strong>Pehla Pani:</strong> 20-25 days CRI stage.<br>
+              • <strong>Peela Ratua:</strong> Propiconazole 25% EC @ 200ml/acre.
+            </td>
+          </tr>
+          <tr>
+            <td><strong>🏛️ Sarkari Yojana (Govt Schemes)</strong></td>
+            <td>Central & State farmer welfare schemes, eligibility, subsidy & application.</td>
+            <td>
+              • <strong>KCC (Kisan Credit Card):</strong> 4% prompt interest, ₹1.6L collateral-free.<br>
+              • <strong>PM Fasal Bima (PMFBY):</strong> 1.5% Rabi, 2% Kharif, 72-hr claim window.<br>
+              • <strong>PM-KUSUM:</strong> 60% subsidy on solar agriculture pumps.
+            </td>
+          </tr>
+          <tr>
+            <td><strong>🩺 Swasthya & First-Aid</strong></td>
+            <td>Emergency rural first aid, vital signs, fever protocol, snake bite care.</td>
+            <td>
+              • <strong>Bukhar (Fever):</strong> Paracetamol 500/650mg, cold water sponging, ORS.<br>
+              • <strong>Snake Bite:</strong> Immobilize, NO tourniquet, rush for ASV + Call 108.
+            </td>
+          </tr>
+          <tr>
+            <td><strong>📐 AgriMath Resolver</strong></td>
+            <td>Instant regional land unit conversion & scientific farm inputs calculation.</td>
+            <td>
+              • 1 Acre = 4.84 Kacha Bigha = 1.61 Pucca Bigha = 4,840 Sq. Yards (Gaj).<br>
+              • Auto-calculates bags for exact acre input.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- SECTION 4: PRESENTATION SLIDE-BY-SLIDE WALKTHROUGH -->
+    <!-- ========================================================================= -->
+    <div class="section-box page-break">
+      <div class="section-head">
+        <span class="section-num">PART 4</span>
+        <h2>Presentation Deck Guide (Slide-by-Slide Viva & Pitch)</h2>
+      </div>
+
+      <div class="concept-card">
+        <div class="concept-title">🎤 Slide 1: Introduction & Hook</div>
+        <p><strong>Slide Pe Kya Hoga:</strong> Project Name: GramSetu AI | Tagline: "Bridging Villages with Offline Intelligence" | Team Names.</p>
+        <p><strong>Speaker Kya Bolega:</strong> <em>"Namaste sabhi ko. Aaj hum introduce kar rahe hain GramSetu AI — Bharat ke gaon aur kisano ke liye banaya gaya 100% offline, voice-first multilingual AI assistant jo bina internet ke kheti, sarkari yojana aur swasthya par to-the-point guidance deta hai."</em></p>
+      </div>
+
+      <div class="concept-card blue">
+        <div class="concept-title">🎤 Slide 2: Real Problem & Motivation</div>
+        <p><strong>Slide Pe Kya Hoga:</strong> 3 Main Problems: (1) Gaon me internet connectivity zero/unstable, (2) Bhasha aur technical barrier, (3) Cloud AI ka galat aur ghumavdar jawab dena.</p>
+        <p><strong>Speaker Kya Bolega:</strong> <em>"Shahron me high-speed 5G hai, lekin khet me internet nahi chalta. Aise me agar kisan ko fasal me rog ya khad ka hisab lagana ho to koi madaddar nahi hota. GramSetu AI is gap ko bridge karta hai."</em></p>
+      </div>
+
+      <div class="concept-card amber">
+        <div class="concept-title">🎤 Slide 3: Technical Innovation (Qwen 2.5 3B + RAG)</div>
+        <p><strong>Slide Pe Kya Hoga:</strong> Architecture diagram (Client ➔ Router ➔ SQLite Memory ➔ RAG ➔ Qwen 2.5 3B ➔ Output).</p>
+        <p><strong>Speaker Kya Bolega:</strong> <em>"Hamara system do chizo ko combine karta hai: Qwen 2.5 (3B) ka advanced reasoning aur SQLite + RAG ka 100% verified ground truth data. Isse model kabhi galat ya man-ghadant jawab nahi deta."</em></p>
+      </div>
+
+      <div class="concept-card purple">
+        <div class="concept-title">🎤 Slide 4: Live Demo Script (Step-by-Step)</div>
+        <p><strong>Demonstration Sequence:</strong></p>
+        <ol>
+          <li><strong>Memory Test:</strong> <em>"Yash naam h mera aur mere paas 4 acre zameen hai"</em> ➔ System auto-saves.</li>
+          <li><strong>Verification:</strong> <em>"Meri zameen kitni hai?"</em> ➔ <em>"Aapke paas 4 acre zameen hai."</em></li>
+          <li><strong>Agri Test:</strong> <em>"Gehu me pehla pani kab dena chahiye?"</em> ➔ Exact CRI stage (20-25 days) answer.</li>
+          <li><strong>Scheme Test:</strong> <em>"Kisan credit card ka byaj kitna hai?"</em> ➔ 4% prompt repayment subvention explanation.</li>
+        </ol>
+      </div>
+
+      <div class="concept-card">
+        <div class="concept-title">🎤 Slide 5: Conclusion & Future Scope</div>
+        <p><strong>Key Takeaway:</strong> GramSetu AI is low-cost, scalable, completely private (zero cloud data leakage), and ready for rural edge devices.</p>
+      </div>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="footer">
+      GramSetu AI Master Technical Documentation • Open-Source Rural Empowerment Project<br>
+      GitHub Repository: <a href="https://github.com/dark-danger/gramsetu" target="_blank" style="color:#059669; font-weight:600;">github.com/dark-danger/gramsetu</a>
+    </div>
+
+  </div>
+
+</body>
+</html>
