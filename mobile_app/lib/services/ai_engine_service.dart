@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 
 class AIEngineService {
   static const String ollamaBaseUrl = 'http://localhost:11434';
-  String activeModel = 'qwen2.5-coder:1.5b';
+  String activeModel = 'qwen2.5:3b';
   bool isOllamaOnline = false;
 
   // Check if Ollama is accessible

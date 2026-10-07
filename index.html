@@ -108,15 +108,15 @@
           <!-- Model Dropdown -->
           <div class="model-pill-wrapper">
             <button class="model-pill-btn" onclick="toggleModelMenu()">
-              <span class="model-title" id="activeModelLabel">GRAM Setu (Qwen 2.5)</span>
-              <span class="model-badge">1.5B</span>
+              <span class="model-title" id="activeModelLabel">GRAM Setu (Qwen 2.5 3B)</span>
+              <span class="model-badge">3B</span>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
             </button>
 
             <!-- Dropdown Menu -->
             <div class="model-menu" id="modelMenu">
               <div class="model-option active" onclick="setModel('ollama')">
-                <div class="opt-title">GRAM Setu - Local Qwen 2.5 (1.5B)</div>
+                <div class="opt-title">GRAM Setu - Local Qwen 2.5 (3B)</div>
                 <div class="opt-sub">Real-time local LLM stream via localhost:11434</div>
               </div>
               <div class="model-option" onclick="setModel('offline')">
