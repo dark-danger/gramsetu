@@ -17,7 +17,7 @@ import urllib.request
 import urllib.error
 
 # Core imports
-from core.config import PORT, BASE_DIR, OLLAMA_URL, OLLAMA_MODEL, DB_PATH
+from core.config import PORT, BASE_DIR, OLLAMA_URL, OLLAMA_MODEL
 from core.database import (
     get_all_memories, set_memory, clear_all_memories, delete_memory,
     save_message, get_recent_messages
@@ -55,19 +55,6 @@ class GramSetuServer(http.server.SimpleHTTPRequestHandler):
             self.handle_get_memories()
             return
 
-        # 3. API: List all knowledge nodes
-        if self.path.startswith('/api/knowledge/list') or self.path == '/api/knowledge':
-            self.handle_get_knowledge()
-            return
-
-        # 0. API: Health Check
-        if self.path.startswith('/api/health'):
-            self.send_response(200)
-            self.send_header('Content-Type', 'application/json')
-            self.end_headers()
-            self.wfile.write(json.dumps({"status": "healthy", "model": OLLAMA_MODEL}).encode('utf-8'))
-            return
-
         super().do_GET()
 
     def do_POST(self):
@@ -86,12 +73,7 @@ class GramSetuServer(http.server.SimpleHTTPRequestHandler):
             self.handle_clear_memories()
             return
 
-        # 4. API: Train / Ingest Knowledge Node
-        if self.path.startswith('/api/train') or self.path.startswith('/api/knowledge/add'):
-            self.handle_train_knowledge()
-            return
-
-        # 5. Fallback direct Ollama proxy for legacy generate
+        # 4. Fallback direct Ollama proxy for legacy generate
         if self.path.startswith('/api/generate') or self.path.startswith('/api/ollama/generate'):
             self.proxy_direct_ollama()
             return
@@ -279,54 +261,13 @@ class GramSetuServer(http.server.SimpleHTTPRequestHandler):
             self.end_headers()
             self.wfile.write(json.dumps({"error": str(e)}).encode('utf-8'))
 
-    def handle_get_knowledge(self):
-        try:
-            import rag.knowledge as py_rag
-            nodes = py_rag.KNOWLEDGE_BASE
-            self.send_response(200)
-            self.send_header('Content-Type', 'application/json')
-            self.end_headers()
-            self.wfile.write(json.dumps({"status": "success", "count": len(nodes), "nodes": nodes}, ensure_ascii=False).encode('utf-8'))
-        except Exception as e:
-            self.send_response(500)
-            self.send_header('Content-Type', 'application/json')
-            self.end_headers()
-            self.wfile.write(json.dumps({"error": str(e)}).encode('utf-8'))
-
-    def handle_train_knowledge(self):
-        try:
-            content_len = int(self.headers.get('Content-Length', 0))
-            post_data = self.rfile.read(content_len) if content_len > 0 else b'{}'
-            data = json.loads(post_data.decode('utf-8'))
-            
-            items = data.get("items") or data.get("nodes") or ([data] if isinstance(data, dict) and (data.get("title") or data.get("question") or data.get("instruction") or data.get("id")) else [])
-            if not items:
-                self.send_response(400)
-                self.send_header('Content-Type', 'application/json')
-                self.end_headers()
-                self.wfile.write(json.dumps({"error": "No valid knowledge items provided"}).encode('utf-8'))
-                return
-
-            from rag.train_ingest import train_and_ingest_nodes
-            res = train_and_ingest_nodes(items)
-            
-            self.send_response(200)
-            self.send_header('Content-Type', 'application/json')
-            self.end_headers()
-            self.wfile.write(json.dumps(res, ensure_ascii=False).encode('utf-8'))
-        except Exception as e:
-            self.send_response(500)
-            self.send_header('Content-Type', 'application/json')
-            self.end_headers()
-            self.wfile.write(json.dumps({"error": str(e)}).encode('utf-8'))
-
 if __name__ == '__main__':
     import webbrowser
     import threading
     import time
 
     os.chdir(BASE_DIR)
-    socketserver.ThreadingTCPServer.allow_reuse_address = True
+    socketserver.TCPServer.allow_reuse_address = True
 
     def open_browser():
         time.sleep(1.2)
@@ -338,7 +279,7 @@ if __name__ == '__main__':
     if getattr(sys, 'frozen', False) or '--open' in sys.argv or os.environ.get("AUTO_OPEN") == "1":
         threading.Thread(target=open_browser, daemon=True).start()
 
-    with socketserver.ThreadingTCPServer(("", PORT), GramSetuServer) as httpd:
+    with socketserver.TCPServer(("", PORT), GramSetuServer) as httpd:
         print(f"============================================================")
         print(f"🌾 GramSetu AI Production Agent running at http://localhost:{PORT}")
         print(f"⚡ Ollama Local Bridge -> {OLLAMA_URL} ({OLLAMA_MODEL})")

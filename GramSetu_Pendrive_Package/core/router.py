@@ -17,7 +17,6 @@ from tools.agri_tools import calculate_agri_requirements, convert_land_area
 from tools.math_tools import evaluate_math
 from tools.image_tools import create_image_payload
 from rag.knowledge import search_knowledge
-from core.lora_adapter import analyze_and_adapt_prompt
 PUNJABI_NAME_MAP = {
     "yash": "ਯਸ਼", "rahul": "ਰਾਹੁਲ", "aman": "ਅਮਨ", "rohan": "ਰੋਹਨ",
     "simran": "ਸਿਮਰਨ", "harpreet": "ਹਰਪ੍ਰੀਤ", "gurpreet": "ਗੁਰਪ੍ਰੀਤ",
@@ -59,9 +58,6 @@ def route_and_prepare(prompt: str, session_id: str = "default") -> dict:
     # 6. Retrieve Relevant Memories
     relevant_memories = get_relevant_memories_for_prompt(resolved_prompt)
 
-    # 7. LoRA Multi-Dialect & Parameter Analysis
-    lora_analysis = analyze_and_adapt_prompt(resolved_prompt)
-
     # Initialize Routing Result
     routing_result = {
         "original_prompt": clean_prompt,
@@ -74,7 +70,6 @@ def route_and_prepare(prompt: str, session_id: str = "default") -> dict:
         "intent": intent,
         "extracted_memories": extracted_memories,
         "relevant_memories": relevant_memories,
-        "lora_adapter": lora_analysis,
         "direct_response": None,
         "tool_results": [],
         "rag_item": None,
@@ -199,22 +194,21 @@ def route_and_prepare(prompt: str, session_id: str = "default") -> dict:
     if rag_match:
         routing_result["rag_item"] = rag_match
         routing_result["tool_results"].append({
-            "tool_name": f"Verified Knowledge: {rag_match['title']}",
+            "tool_name": f"Verified RAG: {rag_match['title']}",
             "result": rag_match["response"]
         })
         
         # Assemble complete, verified, 100% accurate ground truth response
         full_response = rag_match["response"]
         user_land = relevant_memories.get("land_area")
-        # Prepend calculation if applicable
+        # Only prepend seed & fertilizer calculation if query is asking about seeds, fertilizers, or quantity
         if user_land and intent == "agriculture" and re.search(r'\b(seed|beej|fertilizer|khad|dap|urea|potash|zinc|acre|kitna|kitni|dar)\b', clean_prompt.lower()):
             agri_calc = calculate_agri_requirements(resolved_prompt, user_land_str=user_land)
             if agri_calc and "text" in agri_calc and agri_calc["text"] not in full_response:
                 full_response = f"{agri_calc['text']}\n\n---\n\n{full_response}"
         
         routing_result["direct_response"] = full_response
-        # Allow LLM to dynamically synthesize and customize the verified data for the user's specific dialect, tone & parameters
-        routing_result["requires_llm"] = True
+        routing_result["requires_llm"] = False
         return routing_result
 
     return routing_result

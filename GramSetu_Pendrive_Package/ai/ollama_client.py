@@ -19,14 +19,14 @@ def stream_chat_from_ollama(messages: list, model: str = None):
         "messages": messages,
         "stream": True,
         "options": {
-            "temperature": 0.35,
-            "top_p": 0.90,
-            "repeat_penalty": 1.15,
-            "num_predict": 750,
+            "temperature": 0.15,
+            "top_p": 0.80,
+            "repeat_penalty": 1.45,
+            "num_predict": 320,
             "stop": [
-                "<|im_end|>", "<|im_start|>",
+                "<|im_end|>", "<|im_start|>", "\n\n\n",
                 "User:", "\nUser:", "Human:", "\nHuman:",
-                "Assistant:", "\nAssistant:"
+                "Assistant:", "\nAssistant:", "[Confirmed", "[Verified"
             ]
         }
     }

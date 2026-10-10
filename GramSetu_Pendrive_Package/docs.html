@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GramSetu AI - Complete Zero-to-Hero Guide & Presentation Handbook</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@500;600;700;800;900&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --primary: #059669;
+      --primary-dark: #064e3b;
+      --primary-light: #10b981;
+      --accent-orange: #ea580c;
+      --accent-blue: #0284c7;
+      --accent-purple: #7c3aed;
+      --dark: #0f172a;
+      --dark-card: #1e293b;
+      --text: #334155;
+      --bg: #f8fafc;
+      --white: #ffffff;
+      --border: #e2e8f0;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+      font-size: 14px;
+    }
+
+    h1, h2, h3, h4, h5 {
+      font-family: 'Outfit', sans-serif;
+      color: var(--dark);
+      font-weight: 700;
+    }
+
+    @page {
+      size: A4 portrait;
+      margin: 12mm 14mm 12mm 14mm;
+    }
+
+    @media print {
+      body {
+        background: #ffffff;
+        font-size: 11px;
+        color: #0f172a;
+      }
+      .no-print {
+        display: none !important;
+      }
+      .doc-container {
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+      }
+      .page-break {
+        page-break-before: always;
+      }
+      .card-box, .section-box {
+        page-break-inside: avoid;
+        box-shadow: none !important;
+        border: 1px solid #cbd5e1 !important;
+      }
+      .hero {
+        background: #064e3b !important;
+        color: #ffffff !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+    }
+
+    .top-bar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(15, 23, 42, 0.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 12px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: white;
+    }
+
+    .top-title {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 800;
+      font-size: 18px;
+      color: #34d399;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      border: none;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: white;
+      box-shadow: 0 2px 10px rgba(16, 185, 129, 0.3);
+    }
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #059669, #047857);
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.12);
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .doc-container {
+      max-width: 980px;
+      margin: 24px auto 60px;
+      padding: 0 20px;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #064e3b 0%, #065f46 45%, #0f766e 100%);
+      color: white;
+      padding: 36px 32px;
+      border-radius: 20px;
+      box-shadow: 0 10px 25px -5px rgba(6, 78, 59, 0.25);
+      margin-bottom: 28px;
+      position: relative;
+    }
+
+    .hero h1 {
+      font-size: 32px;
+      color: #ffffff;
+      margin-bottom: 8px;
+      letter-spacing: -0.5px;
+    }
+
+    .hero .subtitle {
+      font-size: 16px;
+      color: #a7f3d0;
+      margin-bottom: 20px;
+      font-weight: 500;
+    }
+
+    .badge-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .hero-badge {
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      color: #f0fdf4;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 5px 12px;
+      border-radius: 30px;
+    }
+
+    .section-box {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px 26px;
+      margin-bottom: 24px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.04);
+    }
+
+    .section-head {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #f1f5f9;
+    }
+
+    .section-num {
+      background: linear-gradient(135deg, #059669, #047857);
+      color: white;
+      font-family: 'Outfit', sans-serif;
+      font-weight: 800;
+      font-size: 13px;
+      padding: 4px 10px;
+      border-radius: 8px;
+      letter-spacing: 0.5px;
+    }
+
+    .section-head h2 {
+      font-size: 21px;
+      color: var(--dark);
+    }
+
+    .card-box {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-left: 5px solid var(--primary);
+      border-radius: 12px;
+      padding: 16px 20px;
+      margin-bottom: 16px;
+    }
+
+    .card-box.blue { border-left-color: var(--accent-blue); }
+    .card-box.orange { border-left-color: var(--accent-orange); }
+    .card-box.purple { border-left-color: var(--accent-purple); }
+
+    .card-title {
+      font-size: 16.5px;
+      font-weight: 700;
+      color: var(--dark);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .analogy-box {
+      background: #fefce8;
+      border: 1px dashed #ca8a04;
+      color: #713f12;
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+      margin: 10px 0;
+    }
+
+    .analogy-box strong {
+      color: #854d0e;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin: 14px 0;
+    }
+
+    @media (max-width: 768px) {
+      .grid-2 { grid-template-columns: 1fr; }
+    }
+
+    .grid-card {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 16px;
+    }
+
+    .grid-card h4 {
+      color: var(--primary-dark);
+      margin-bottom: 6px;
+      font-size: 14.5px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 14px 0;
+      font-size: 13px;
+    }
+
+    th, td {
+      padding: 10px 14px;
+      text-align: left;
+      border: 1px solid var(--border);
+    }
+
+    th {
+      background: #f1f5f9;
+      color: var(--dark);
+      font-weight: 700;
+    }
+
+    tr:nth-child(even) {
+      background: #fcfcfd;
+    }
+
+    pre, .diagram-box {
+      background: #0f172a;
+      color: #38bdf8;
+      font-family: 'Fira Code', monospace;
+      font-size: 11.5px;
+      padding: 16px 18px;
+      border-radius: 12px;
+      overflow-x: auto;
+      line-height: 1.5;
+      margin: 14px 0;
+    }
+
+    code {
+      font-family: 'Fira Code', monospace;
+      background: #e2e8f0;
+      color: #0f172a;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 12px;
+    }
+
+    .pill {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 11.5px;
+      font-weight: 600;
+    }
+    .pill-green { background: #dcfce7; color: #166534; }
+    .pill-blue { background: #e0f2fe; color: #0369a1; }
+    .pill-orange { background: #ffedd5; color: #9a3412; }
+    .pill-purple { background: #f3e8ff; color: #6b21a8; }
+
+    ul, ol {
+      margin-left: 22px;
+      margin-bottom: 12px;
+    }
+
+    li {
+      margin-bottom: 5px;
+    }
+
+    .qna-box {
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      border-radius: 10px;
+      padding: 12px 16px;
+      margin-bottom: 12px;
+    }
+
+    .qna-q {
+      font-weight: 700;
+      color: #166534;
+      font-size: 13.5px;
+      margin-bottom: 4px;
+    }
+
+    .qna-a {
+      color: #1e293b;
+      font-size: 13px;
+    }
+
+    .footer {
+      text-align: center;
+      padding: 24px;
+      color: #94a3b8;
+      font-size: 12px;
+      border-top: 1px solid #e2e8f0;
+      margin-top: 40px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOP ACTION BAR -->
+  <div class="top-bar no-print">
+    <div class="top-title">
+      <span>🌾 GramSetu AI</span>
+      <span style="font-size:12px; background:rgba(255,255,255,0.15); padding:2px 8px; border-radius:12px; color:white;">Zero-to-Hero Guide</span>
+    </div>
+    <div class="action-btn-group">
+      <a href="/" class="btn btn-secondary">💬 Open Live App</a>
+      <button onclick="window.print()" class="btn btn-primary">🖨️ Print / Download PDF</button>
+    </div>
+  </div>
+
+  <div class="doc-container">
+
+    <!-- HERO HEADER -->
+    <div class="hero">
+      <h1>🌾 GramSetu AI — Zero Se Hero Complete Guide</h1>
+      <div class="subtitle">Bacho Ke Samjhne, Presentation & Viva Ke Liye Har Ek Concept Ka Detailed Asaan Breakdown (Hinglish Me)</div>
+      <div class="badge-bar">
+        <span class="hero-badge">👶 Beginner to Advanced</span>
+        <span class="hero-badge">🤖 Qwen 2.5 (3B) Explained</span>
+        <span class="hero-badge">🚀 Google Antigravity Ecosystem</span>
+        <span class="hero-badge">💻 Python • Flutter • C++ • FastAPI</span>
+        <span class="hero-badge">🌐 100% Offline AI</span>
+      </div>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- SECTION 1: KYA HAI AUR KYU HAI -->
+    <!-- ========================================================================= -->
+    <div class="section-box">
+      <div class="section-head">
+        <span class="section-num">PART 1</span>
+        <h2>1. GramSetu AI Kya Hai Aur Yeh Kyu Banaya Gaya?</h2>
+      </div>
+
+      <div class="card-box">
+        <div class="card-title">❓ 1.1 GramSetu AI Kya Hai? (What is it?)</div>
+        <p><strong>GramSetu AI (ग्रामसेतु AI)</strong> ek aisa AI Assistant hai jo <strong>bina kisi internet ke</strong> seedha aapke laptop ya mobile phone ke andar chalta hai. Yeh gaon aur dehat ke kisano aur aam logo ko unki apni bolchal ki bhasha (Hindi, Hinglish, Punjabi) me voice (aawaz) ke sath madad karta hai.</p>
+        <ul>
+          <li><strong>Kisan Mitra:</strong> Fasal ki buwai, khad ka hisab, sinchai ka sahi samay aur bimari ki dawai.</li>
+          <li><strong>Sarkari Yojana:</strong> KCC (Kisan Credit Card), PM Fasal Bima, PM-Kusum Solar Pump, Ayushman Card ke niyam.</li>
+          <li><strong>Swasthya Salah:</strong> Bukhar, chot, saanp katne par turant first-aid emergency guidance.</li>
+        </ul>
+      </div>
+
+      <div class="card-box orange">
+        <div class="card-title">💡 1.2 Yeh Kyu Banaya Gaya? (Why do we need it?)</div>
+        <p>Shahron me sabke paas 5G internet aur ChatGPT/Gemini hai. Lekin gaon me khet ke beech me internet ka 1 signal bhi nahi aata. Aise me agar fasal me keeda lag jaye ya kisi ko emergency ho, to cloud AI kisi kaam nahi aata.</p>
+        
+        <div class="analogy-box">
+          <strong>🎯 Real-Life Example:</strong> Agar aap gaon ke khet me khade hain jahan network "No Service" dikha raha hai, aur aapko puchna hai <em>"Gehu me pehla pani kab de?"</em> ya <em>"5 acre me kitni khad lagegi?"</em> — to ChatGPT fail ho jayega, lekin <strong>GramSetu AI turant 1 second me accurate jawab dega!</strong>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- SECTION 2: AI FOUNDATION & 3B CONCEPT -->
+    <!-- ========================================================================= -->
+    <div class="section-box page-break">
+      <div class="section-head">
+        <span class="section-num">PART 2</span>
+        <h2>2. AI, LLM Aur "Qwen 2.5 3B" Ka Asli Matlab Kya Hai?</h2>
+      </div>
+
+      <!-- AI & LLM -->
+      <div class="card-box blue">
+        <div class="card-title">🧠 2.1 AI aur LLM Kya Hote Hain?</div>
+        <ul>
+          <li><strong>AI (Artificial Intelligence):</strong> Machine ko insaan ki tarah sochna, samajhna aur faisla lena sikhana.</li>
+          <li><strong>LLM (Large Language Model):</strong> Ek aisa software brain jisko arbon kitabein, internet articles aur codes padhaye gaye hain taki wo insaano ki bhasha samajh kar jawab likh sake.</li>
+        </ul>
+      </div>
+
+      <!-- QWEN 2.5 3B -->
+      <div class="card-box">
+        <div class="card-title">🔬 2.2 "Qwen 2.5 3B" Naam Ka Ek-Ek Akshar Samajhte Hain</div>
+        <table>
+          <thead>
+            <tr>
+              <th>Naam Ka Tukda</th>
+              <th>Technical Matlab</th>
+              <th>Aam Bhasha Me Samjho</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Qwen</strong></td>
+              <td>Alibaba Cloud dwara banayi gayi AI Model Family.</td>
+              <td>Model ka brand name (jaise car ka naam Swift ya Scorpio hota hai).</td>
+            </tr>
+            <tr>
+              <td><strong>2.5</strong></td>
+              <td>Model ka Version / Generation.</td>
+              <td>Nayi generation jisme Hindi, Hinglish, Maths aur Coding behtar hui hai.</td>
+            </tr>
+            <tr>
+              <td><strong>3B</strong></td>
+              <td><strong>3 Billion Parameters (300 Crore Connections)</strong></td>
+              <td>Model ke artificial brain me <strong>300 Crore digital neurons</strong> hain jo sawal ko process karte hain.</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="analogy-box">
+          <strong>💡 3B vs 1.5B vs 70B (Dimag Ka Size):</strong>
+          <ul>
+            <li><strong>0.5B (50 Crore Neurons):</strong> Chota bacha — bohot tez bhagta hai par mushkil sawal me ulta-seedha bol deta hai.</li>
+            <li><strong>1.5B (150 Crore Neurons):</strong> School student — theek hai par lambi baat me loop ho jata hai.</li>
+            <li><strong>3B (300 Crore Neurons) [Hamara Model]:</strong> <em>College Graduate!</em> Razor-sharp logic, to-the-point baat karta hai, aur laptop/mobile me bina GPU ke offline chalta hai (~1.9 GB RAM)!</li>
+            <li><strong>70B (7000 Crore Neurons):</strong> Super Scientist — par isko chalane ke liye 10 Lakh ka server computer chahiye.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- QUANTIZATION & GGUF -->
+      <div class="card-box purple">
+        <div class="card-title">📦 2.3 Quantization (Q4_K_M) Aur GGUF Kya Hai?</div>
+        <p>Asli 3B model ka size <strong>8 GB</strong> hota hai. 8 GB ka model phone me load karne par phone hang ho jayega. Isliye hum <strong>Quantization</strong> use karte hain:</p>
+        <ul>
+          <li><strong>Quantization (Q4_K_M):</strong> 16-bit ke heavy mathematical numbers ko 4-bit ke lightweight numbers me compress karna bina akalmandi khoye. Size 8 GB se ghatkar sirf <strong>1.9 GB</strong> reh jata hai.</li>
+          <li><strong>GGUF Format:</strong> Model weights aur dictionary ko ek single portable file me pack karne ka format.</li>
+        </ul>
+        <div class="analogy-box">
+          <strong>💡 Example:</strong> Jaise camera se li gayi 40 MB ki RAW photo ko hum JPG bana dete hain (2 MB) par dekhne me photo bilkul saaf lagti hai — waise hi Quantization model ko chota aur tez bana deta hai!
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- SECTION 3: ANTIGRAVITY & PROMPTING -->
+    <!-- ========================================================================= -->
+    <div class="section-box page-break">
+      <div class="section-head">
+        <span class="section-num">PART 3</span>
+        <h2>3. Google Antigravity & Prompting Kya Hoti Hai?</h2>
+      </div>
+
+      <div class="card-box blue">
+        <div class="card-title">🛸 3.1 Antigravity (Google DeepMind Agent System) Kya Hai?</div>
+        <p><strong>Antigravity</strong> ek advanced agentic AI platform hai jo coder ke sath pair-programming karta hai:</p>
+        <ul>
+          <li>Yeh sirf code nahi likhta, balki pura system architecture design karta hai, terminal commands chala kar test karta hai, files update karta hai aur production errors fix karta hai.</li>
+          <li>Humne Antigravity ki agentic capabilities use karke GramSetu AI ke modular architecture (Routing, RAG, Memory, Testing) ko end-to-end build kiya.</li>
+        </ul>
+      </div>
+
+      <div class="card-box orange">
+        <div class="card-title">✍️ 3.2 Prompting Aur System Prompts Kya Hote Hain?</div>
+        <p><strong>Prompt</strong> ka matlab hota hai AI ko diya gaya nirdesh (instruction) ya sawal.</p>
+        <table>
+          <thead>
+            <tr>
+              <th>Prompt Type</th>
+              <th>Kaun Deta Hai?</th>
+              <th>Example Aur Kaam</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>1. System Prompt</strong></td>
+              <td>Developer (Code ke andar)</td>
+              <td>AI ka rulebook: <em>"Tum GramSetu AI ho. Seedha to-the-point jawab do, 2 se 4 bullet points me, bar-bar line repeat mat karo."</em></td>
+            </tr>
+            <tr>
+              <td><strong>2. User Prompt</strong></td>
+              <td>User (Kisan / Aam Insaan)</td>
+              <td>User ka sawal: <em>"Kisan credit card ka byaj kitna hai?"</em></td>
+            </tr>
+            <tr>
+              <td><strong>3. Assistant Output</strong></td>
+              <td>AI Engine</td>
+              <td>AI ka final answer: <em>"1. KCC par prabhavi byaj dar 4% hai..."</em></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="analogy-box">
+          <strong>⚙️ Temperature & Repeat Penalty Parameters:</strong>
+          <ul>
+            <li><strong>Temperature (0.15):</strong> Agar temperature 0.8 hota to AI kahaniyan banata (tukke marta). <strong>0.15 temperature</strong> ka matlab hai AI 100% factual aur serious rahega.</li>
+            <li><strong>Repeat Penalty (1.45):</strong> AI ko ek hi line (jaise "Aapko aisa karna chahiye...") bar-bar repeat karne se rokne wala digital guard.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- SECTION 4: PROGRAMMING LANGUAGES & SERVER EXPLAINED -->
+    <!-- ========================================================================= -->
+    <div class="section-box page-break">
+      <div class="section-head">
+        <span class="section-num">PART 4</span>
+        <h2>4. Kaun Si Language Kyu Use Hui Aur Server Kya Hota Hai?</h2>
+      </div>
+
+      <!-- LANGUAGES -->
+      <div class="card-box">
+        <div class="card-title">💻 4.1 Technologies & Programming Languages Ka Role</div>
+        <div class="grid-2">
+          <div class="grid-card">
+            <h4>🐍 Python (Backend & Agent Brain)</h4>
+            <p><strong>Kyu use hui?</strong> AI, machine learning aur logic processing ke liye Python duniya ki #1 language hai. Hamara main server (<code>server.py</code>), RAG engine aur Memory routers Python me likhe gaye hain.</p>
+          </div>
+
+          <div class="grid-card">
+            <h4>📱 Flutter & Dart (Mobile App)</h4>
+            <p><strong>Kyu use hui?</strong> Google ka cross-platform framework jo ek hi code se Android aur iPhone dono ke liye super-fast native mobile apps banata hai.</p>
+          </div>
+
+          <div class="grid-card">
+            <h4>⚡ C++ & llama.cpp (Speed Engine)</h4>
+            <p><strong>Kyu use hui?</strong> C++ hardware ke sabse kareeb hoti hai. Model ke 3 Billion calculations ko micro-seconds me CPU par run karne ke liye C++ inference engine use hota hai.</p>
+          </div>
+
+          <div class="grid-card">
+            <h4>🌐 HTML5, CSS3 & JavaScript (Web PWA)</h4>
+            <p><strong>Kyu use hui?</strong> Web browser me modern UI, Deep Think accordion aur offline PWA (Progressive Web App) chalane ke liye.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SERVER & API EXPLAINED -->
+      <div class="card-box blue">
+        <div class="card-title">🍽️ 4.2 Server Aur API Kya Hote Hain? (Restaurant Waiter Analogy)</div>
+        <p>Bacho ko samjhane ke liye sabse asaan Restaurant example:</p>
+        
+        <div class="analogy-box">
+          <ul>
+            <li><strong>Client (Customer):</strong> Aapka mobile ya browser jahan aapne sawal type kiya: <em>"Bhai bukhar me kya kare?"</em></li>
+            <li><strong>API (Waiter):</strong> Waiter aapka order lekar kitchen tak le jata hai. API ka kaam data ko mobile se backend tak le jana hai.</li>
+            <li><strong>Server (Kitchen & Chef):</strong> Server wo computer software (<code>server.py</code>) hai jo kitchen me baithkar sawal ko process karta hai, SQLite memory check karta hai, Qwen AI se jawab banwata hai aur waiter (API) ko deta hai.</li>
+            <li><strong>Response (Khana Table Par):</strong> Mobile screen par token-by-token aane wala to-the-point jawab.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- SQLITE -->
+      <div class="card-box amber">
+        <div class="card-title">📔 4.3 SQLite Database (Permanent Diary)</div>
+        <p>AI ka dimag computer band hone par sab bhool jata hai. <strong>SQLite</strong> ek aisi permanent digital diary (<code>gramsetu.db</code>) hai jo hard disk me safe rehti hai:</p>
+        <ul>
+          <li>Jab user bolta hai <em>"Yash naam hai mera"</em>, to diary me note ho jata hai: <code>user_name = Yash</code>.</li>
+          <li>Jab pucha jaye <em>"Mera naam kya hai?"</em>, to diary se padh kar direct bola jata hai <em>"Yash."</em></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- SECTION 5: RAG & AGENT TOOLS -->
+    <!-- ========================================================================= -->
+    <div class="section-box page-break">
+      <div class="section-head">
+        <span class="section-num">PART 5</span>
+        <h2>5. RAG Engine Aur AgriMath Tools</h2>
+      </div>
+
+      <div class="card-box purple">
+        <div class="card-title">📚 5.1 RAG (Retrieval-Augmented Generation) — Open Book Exam</div>
+        <p>Agar exam me student se pucha jaye <em>"Kisan Credit Card par kitna byaj lagta hai?"</em> aur wo bina padhe andaza lagaye to galat bol sakta hai. Lekin agar uske samne verified book khol di jaye to wo exact sahi likhega.</p>
+        <ul>
+          <li><strong>Curated Knowledge:</strong> Humne KCC (4% rate, 1.6 Lakh limit), PM Fasal Bima (1.5% Rabi premium, 72-hr claim window), Wheat CRI stage irrigation (20-25 din) ko local verified memory me feed kiya hai.</li>
+        </ul>
+      </div>
+
+      <div class="card-box">
+        <div class="card-title">📐 5.2 AgriMath Calculator Tool</div>
+        <p>Kisan aksar Acre, Bigha aur Gaj me ulajh jate hain:</p>
+        <ul>
+          <li><strong>1 Acre</strong> = <strong>4.84 Kacha Bigha</strong> = <strong>1.61 Pucca Bigha</strong> = <strong>4,840 Gaj</strong>.</li>
+          <li>Agar kisan bole <em>"5 acre me gehu ugana hai"</em>, to tool mathematically calculate karke bata deta hai: <strong>200-225 kg Beej, 5 Bag DAP, 10 Bag Urea, 50 kg Zinc</strong>.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- SECTION 6: VIVA QUESTIONS & ANSWERS FOR STUDENTS -->
+    <!-- ========================================================================= -->
+    <div class="section-box page-break">
+      <div class="section-head">
+        <span class="section-num">PART 6</span>
+        <h2>6. Presentation & Viva Q&A Guide (Examiner Kya Puchega?)</h2>
+      </div>
+
+      <p>Students ke viva ya project presentation me examiner ye 6 standard sawal puch sakta hai:</p>
+
+      <div class="qna-box">
+        <div class="qna-q">Q1: Aapka project ChatGPT ya Google Gemini se alag kaise hai?</div>
+        <div class="qna-a"><strong>Ans:</strong> ChatGPT aur Gemini ko chalane ke liye 24/7 high-speed internet chahiye aur wo data cloud par bhejte hain. Hamara <strong>GramSetu AI 100% Offline</strong> chalta hai, 1 byte internet nahi lagta, private hai, aur gaon ke kisano ke liye Hinglish/Voice me to-the-point jawab deta hai.</div>
+      </div>
+
+      <div class="qna-box">
+        <div class="qna-q">Q2: 3B Model ka matlab kya hai aur isko kyu chuna?</div>
+        <div class="qna-a"><strong>Ans:</strong> 3B ka matlab 3 Billion (300 Crore) parameters hai. Yeh model laptop aur phone me offline chalne ke liye sabse perfect (sweet spot) hai kyunki yeh sirf 1.9 GB RAM leta hai aur razor-sharp logical reasoning deta hai.</div>
+      </div>
+
+      <div class="qna-box">
+        <div class="qna-q">Q3: RAG aur Deterministic Memory ka kya fayda hai?</div>
+        <div class="qna-a"><strong>Ans:</strong> AI models aksar galat numbers ya hallucinated baatein bol dete hain. SQLite Deterministic Memory user ke naam/zameen ko 100% yaad rakhti hai aur RAG sarkari yojanaon ke verified facts supply karta hai — jisse zero error hota hai.</div>
+      </div>
+
+      <div class="qna-box">
+        <div class="qna-q">Q4: Backend aur Frontend me kaun si languages use hui hain?</div>
+        <div class="qna-a"><strong>Ans:</strong> Backend AI brain Python (<code>server.py</code>) me hai, Local inference C++ (llama.cpp/Ollama) se hota hai, Web interface HTML5/CSS/JavaScript PWA hai aur Mobile app Flutter (Dart) me bani hai.</div>
+      </div>
+
+      <div class="qna-box">
+        <div class="qna-q">Q5: Temperature 0.15 kyu rakha gaya hai?</div>
+        <div class="qna-a"><strong>Ans:</strong> High temperature par AI kahaniyan banane lagta hai. 0.15 temperature model ko strictly serious, factual aur to-the-point banata hai taki kisan ko galat kheti salah na mile.</div>
+      </div>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="footer">
+      GramSetu AI Project Documentation • Built for Rural Empowerment • Open Source Repository: <a href="https://github.com/dark-danger/gramsetu" target="_blank" style="color:#059669; font-weight:700;">github.com/dark-danger/gramsetu</a>
+    </div>
+
+  </div>
+
+</body>
+</html>

@@ -52,35 +52,35 @@ def detect_intent(text: str) -> str:
         return "math_calculation"
 
     # 7. Agriculture Domain & Diagnostics (Crops, Soil, Fertilizer, Irrigation, Dairy/Livestock)
-    if re.search(r'\b(wheat|gehu|gehun|dhan|rice|paddy|sarson|mustard|cotton|kapas|ganna|sugarcane|kheti|fasal|crop|keeda|sundi|fungus|rust|rot|spray|seed rate|beej|buwai|dap|urea|potash|zinc|khad|fertilizer|irrigation|sinchai|pani|paani|soil|mitti|npk|ph|gypsum|chuna|pashu|gay|bhains|cow|buffalo|doodh|milk|thanela|mastitis|khurpaka|muhpaka|fmd)\b', lower):
+    if re.search(r'(?:^|[^\w\u0900-\u097F\u0A00-\u0A7F])(wheat|gehu|gehun|गेहूं|गेहू|कनक|dhan|rice|paddy|धान|चावल|झोना|sarson|mustard|सरसों|सरसो|cotton|kapas|कपास|नरमा|ganna|sugarcane|गन्ना|kheti|खेती|खेति|fasal|फसल|फ़सल|crop|keeda|कीड़ा|कीट|sundi|सूंडी|fungus|फंगस|rust|रतुआ|रोली|rot|spray|छिड़काव|स्प्रे|seed rate|beej|बीज|बियां|buwai|बुवाई|बोनी|dap|डीएप|यूरिया|urea|potash|पोटाश|zinc|जिंक|khad|खाद|fertilizer|उर्वरक|irrigation|sinchai|सिंचाई|सिचाई|पानी|pani|paani|soil|mitti|मिट्टी|माटी|npk|ph|gypsum|जिप्सम|chuna|चूना|pashu|पशु|गाय|gay|भैंस|bhains|cow|buffalo|doodh|दूध|milk|thanela|थनैला|mastitis|khurpaka|खुरपका|muhpaka|मुंहपका|fmd)(?:$|[^\w\u0900-\u097F\u0A00-\u0A7F])', lower):
         return "agriculture"
 
     # 8. Government Schemes (KCC, PM Kisan, Ayushman, Fasal Bima, Kusum, Soil Card)
-    if re.search(r'\b(pm kisan|pmkisan|ayushman|yojana|yojna|samman nidhi|kcc|kisan credit card|credit card|kisan card|subsidy|fasal bima|crop insurance|ration card|e-kyc|ekyc|kusum|solar pump|soil health|mitti card|pension|shramik)\b', lower):
+    if re.search(r'(?:^|[^\w\u0900-\u097F\u0A00-\u0A7F])(pm kisan|pmkisan|ayushman|yojana|yojna|योजना|samman nidhi|सम्मान निधि|kcc|kisan credit card|क्रेडिट कार्ड|credit card|kisan card|subsidy|सब्सिडी|अनुदान|fasal bima|फसल बीमा|crop insurance|ration card|राशन कार्ड|e-kyc|ekyc|kusum|कुसुम|solar pump|सोलर पंप|soil health|मृदा स्वास्थ्य|mitti card|pension|पेंशन|shramik|श्रमिक)(?:$|[^\w\u0900-\u097F\u0A00-\u0A7F])', lower):
         return "government_scheme"
 
     # 9. Emergency First Aid & Clinical Medical (Vitals, Bites, Fever, Pain, Wounds)
-    if re.search(r'\b(cpr|cardiac arrest|heart attack|snake|saanp|bite|katna|current|electric shock|burn|jalna|bleeding|khoon|poison|zehar|choking|fracture|blood pressure|bp|pulse rate|heart rate|spo2|vital signs|fever|bukhar|temperature|tapman|sugar level|dast|loose motion|diarrhea|vomiting|ulti|pet dard|stomach pain|headache|sardard|chot|injury|wound|ghav|first aid)\b', lower):
+    if re.search(r'(?:^|[^\w\u0900-\u097F\u0A00-\u0A7F])(cpr|cardiac arrest|heart attack|snake|saanp|सांप|साँप|bite|काटना|katna|डसना|current|electric shock|करंट|burn|जलना|jalna|bleeding|खून|khoon|poison|zehar|ज़हर|choking|fracture|हड्डी|blood pressure|bp|pulse rate|heart rate|spo2|vital signs|fever|bukhar|बुखार|तावत|temperature|tapman|तापमान|sugar level|dast|दस्त|loose motion|diarrhea|vomiting|ulti|उल्टी|pet dard|पेट दर्द|stomach pain|headache|sardard|सिरदर्द|chot|चोट|injury|wound|ghav|घाव|first aid|प्राथमिक उपचार)(?:$|[^\w\u0900-\u097F\u0A00-\u0A7F])', lower):
         return "medical"
 
     # 10. Pharmaceutical & Pharmacology
-    if re.search(r'\b(paracetamol|amoxicillin|antibiotic|antibiotics|nsaid|nsaids|antipyretic|antihistamine|ppi|omeprazole|pantoprazole|azithromycin|ibuprofen|drug|medicine|dosage|adme|pharmacokinetics|cold chain|vaccine|dawa|dawai|tablet|goli)\b', lower):
+    if re.search(r'(?:^|[^\w\u0900-\u097F\u0A00-\u0A7F])(paracetamol|पैरासिटामोल|amoxicillin|antibiotic|antibiotics|एंटीबायोटिक|nsaid|nsaids|antipyretic|antihistamine|ppi|omeprazole|pantoprazole|azithromycin|ibuprofen|drug|medicine|dosage|खुराक|adme|pharmacokinetics|cold chain|vaccine|टीका|dawa|दवा|दवाई|dawai|tablet|goli|गोली)(?:$|[^\w\u0900-\u097F\u0A00-\u0A7F])', lower):
         return "pharmaceutical"
 
     # 11. Biology & Life Sciences
-    if re.search(r'\b(photosynthesis|calvin cycle|c3|c4|cam|chlorophyll|rubisco|nitrogen cycle|rhizobium|azotobacter|trichoderma|dna|rna|genetics|transcription|translation|central dogma|mitochondria|biology)\b', lower):
+    if re.search(r'(?:^|[^\w\u0900-\u097F\u0A00-\u0A7F])(photosynthesis|प्रकाश संश्लेषण|calvin cycle|c3|c4|cam|chlorophyll|क्लोरोफिल|rubisco|nitrogen cycle|नाइट्रोजन चक्र|rhizobium|राइजोबियम|azotobacter|trichoderma|ट्राइकोडर्मा|dna|rna|genetics|आनुवंशिकी|transcription|translation|central dogma|mitochondria|biology|बायोलॉजी|जीव विज्ञान)(?:$|[^\w\u0900-\u097F\u0A00-\u0A7F])', lower):
         return "biology"
 
     # 12. Tech & Hardware / IoT / Embedded
-    if re.search(r'\b(arduino|esp32|flame sensor|relay|soil moisture|ultrasonic|raspberry pi|iot|microcontroller|gpio|sensor|motor driver|l298n|dht11|dht22)\b', lower):
+    if re.search(r'(?:^|[^\w\u0900-\u097F\u0A00-\u0A7F])(arduino|आर्डुइनो|esp32|ईएसपी32|flame sensor|relay|रिले|soil moisture|ultrasonic|raspberry pi|iot|आईओटी|microcontroller|gpio|sensor|सेंसर|motor driver|l298n|dht11|dht22|oled|oled display)(?:$|[^\w\u0900-\u097F\u0A00-\u0A7F])', lower):
         return "tech_hardware"
 
     # 13. Programming & Software
-    if re.search(r'\b(python|fastapi|javascript|sql|c\+\+|coding|function|class|algorithm|code|compile|bug|script|api|database|git|async|fetch|readablestream)\b', lower):
+    if re.search(r'(?:^|[^\w\u0900-\u097F\u0A00-\u0A7F])(python|पायथन|fastapi|javascript|जावास्क्रिप्ट|sql|c\+\+|coding|कोडिंग|function|class|algorithm|code|compile|bug|script|api|database|डेटाबेस|git|async|fetch|readablestream)(?:$|[^\w\u0900-\u097F\u0A00-\u0A7F])', lower):
         return "coding_technical"
 
     # 14. Greeting & Casual Chit-Chat
-    if re.search(r'\b(hi|hello|hey|namaste|pranam|kya\s+h[a]*l|kaise\s+ho|kese\s+ho|kiddan|who\s+are\s+you|bhai|yaar|ram\s+ram|sat\s+sri\s+akal|good\s+morning|good\s+evening|kya\s+chal\s+raha|sab\s+badhiya|kem\s+cho|kasa\s+kay|kaisa\s+hai)\b', lower):
+    if re.search(r'(?:^|[^\w\u0900-\u097F\u0A00-\u0A7F])(hi|hello|hey|namaste|नमस्ते|pranam|प्रणाम|kya\s+h[a]*l|kaise\s+ho|कैसे\s+हो|kese\s+ho|kiddan|ਕਿੱਦਾਂ|who\s+are\s+you|bhai|भाई|भैया|yaar|ताऊ|काका|ram\s+ram|राम\s+राम|sat\s+sri\s+akal|ਸਤਿ\s+ਸ਼੍ਰੀ\s+ਅਕਾਲ|good\s+morning|good\s+evening|kya\s+chal\s+raha|sab\s+badhiya|kem\s+cho|kasa\s+kay|kaisa\s+hai)(?:$|[^\w\u0900-\u097F\u0A00-\u0A7F])', lower):
         return "greeting"
 
     return "general_discussion"

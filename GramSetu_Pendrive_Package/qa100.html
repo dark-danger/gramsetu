@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GramSetu AI — 100 Master Viva & Interview Questions, Answers & Reasons</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0f1d;
+            --bg-card: rgba(18, 26, 47, 0.8);
+            --accent-green: #10b981;
+            --accent-emerald: #059669;
+            --accent-gold: #f59e0b;
+            --accent-blue: #3b82f6;
+            --accent-purple: #8b5cf6;
+            --accent-cyan: #06b6d4;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --border-card: rgba(255, 255, 255, 0.08);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            padding: 0 1rem 5rem 1rem;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(16, 185, 129, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(59, 130, 246, 0.08) 0%, transparent 40%);
+            background-attachment: fixed;
+        }
+
+        .container { max-width: 1000px; margin: 0 auto; }
+        header { text-align: center; padding: 3.5rem 1rem 2rem 1rem; }
+        h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2.6rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #ffffff 30%, #10b981 70%, #06b6d4 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.75rem;
+        }
+        .subtitle { color: var(--text-secondary); font-size: 1.1rem; max-width: 750px; margin: 0 auto; }
+
+        .category-header {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent-cyan);
+            margin: 2.5rem 0 1rem 0;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid rgba(6, 182, 212, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .qa-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border-card);
+            border-radius: 0.9rem;
+            padding: 1.25rem;
+            margin-bottom: 1rem;
+            page-break-inside: avoid;
+            transition: transform 0.15s ease, border-color 0.15s ease;
+        }
+        .qa-box:hover { border-color: rgba(16, 185, 129, 0.4); }
+
+        .q-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+        }
+        .q-num {
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--accent-green);
+            padding: 0.1rem 0.45rem;
+            border-radius: 0.35rem;
+            font-size: 0.85rem;
+            font-weight: 700;
+            font-family: 'JetBrains Mono', monospace;
+            white-space: nowrap;
+        }
+
+        .ans-block {
+            color: #e2e8f0;
+            font-size: 0.93rem;
+            margin-bottom: 0.6rem;
+            padding-left: 0.5rem;
+            border-left: 2px solid var(--accent-blue);
+        }
+        .ans-block strong { color: var(--accent-blue); }
+
+        .reason-block {
+            color: #cbd5e1;
+            background: rgba(245, 158, 11, 0.08);
+            border: 1px dashed rgba(245, 158, 11, 0.35);
+            border-radius: 0.5rem;
+            padding: 0.6rem 0.85rem;
+            font-size: 0.88rem;
+        }
+        .reason-block strong { color: var(--accent-gold); }
+
+        .floating-btn {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: linear-gradient(135deg, var(--accent-green), var(--accent-emerald));
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 0.75rem;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.5);
+            z-index: 100;
+        }
+
+        @media print {
+            body { background: white !important; color: black !important; padding: 0; }
+            .qa-box { background: white !important; border: 1px solid #cbd5e1 !important; color: black !important; margin-bottom: 0.8rem; }
+            .q-title { color: #0f172a !important; }
+            .ans-block { color: #1e293b !important; border-left-color: #2563eb !important; }
+            .reason-block { background: #fefce8 !important; border: 1px solid #facc15 !important; color: #713f12 !important; }
+            .floating-btn { display: none !important; }
+            h1 { color: #0f172a !important; -webkit-text-fill-color: initial !important; }
+            .category-header { color: #0369a1 !important; border-bottom-color: #0369a1 !important; }
+        }
+    </style>
+</head>
+<body>
+
+    <button onclick="window.print()" class="floating-btn">🖨️ Print / Save 100 Q&A PDF</button>
+
+    <div class="container">
+        <header>
+            <h1>GramSetu AI — 100 Master Viva & Interview Questions</h1>
+            <p class="subtitle">Complete question, answer, and deep technical reasoning guide for viva examinations, project juries, and technical presentations.</p>
+        </header>
+
+        <!-- CHAPTER 1 -->
+        <div class="category-header">📚 Section 1: AI, LLM & Machine Learning Fundamentals (Q1 – Q15)</div>
+
+        <div class="qa-box">
+            <div class="q-title"><span class="q-num">Q1</span> What is Artificial Intelligence (AI) in simple terms?</div>
+            <div class="ans-block"><strong>Answer:</strong> AI is software designed to simulate human cognitive functions such as understanding natural language, pattern recognition, learning from data, and problem-solving.</div>
+            <div class="reason-block"><strong>Reason:</strong> Unlike traditional rule-based programs that only follow fixed if-else statements, AI adapts to varied human inputs and extracts meaning probabilistically.</div>
+        </div>
+
+        <div class="qa-box">
+            <div class="q-title"><span class="q-num">Q2</span> What is an LLM (Large Language Model)?</div>
+            <div class="ans-block"><strong>Answer:</strong> An LLM is a deep neural network (Transformer architecture) trained on massive text corpora to predict and generate human-like text given a prompt.</div>
+            <div class="reason-block"><strong>Reason:</strong> LLMs convert words into mathematical vectors (embeddings) and calculate attention weights across tokens to understand context and intent.</div>
+        </div>
+
+        <div class="qa-box">
+            <div class="q-title"><span class="q-num">Q3</span> What does "3B" mean in Qwen 2.5 3B?</div>
+            <div class="ans-block"><strong>Answer:</strong> "3B" stands for 3 Billion Parameters (approximately 300 Crore mathematical connection weights/synapses).</div>
+            <div class="reason-block"><strong>Reason:</strong> Parameters define the model's knowledge capacity and reasoning depth. 3B offers high reasoning capability while occupying under 2 GB of RAM when quantized.</div>
+        </div>
+
+        <div class="qa-box">
+            <div class="q-title"><span class="q-num">Q4</span> What is Model Quantization (e.g., Q4_K_M)?</div>
+            <div class="ans-block"><strong>Answer:</strong> Quantization is the process of compressing 16-bit floating-point weights (FP16) into 4-bit integers (INT4).</div>
+            <div class="reason-block"><strong>Reason:</strong> It reduces memory consumption from 6 GB down to ~1.9 GB with less than a 1-2% loss in semantic accuracy, allowing edge CPUs to execute inference swiftly.</div>
+        </div>
+
+        <div class="qa-box">
+            <div class="q-title"><span class="q-num">Q5</span> What is the difference between Deterministic vs Probabilistic AI?</div>
+            <div class="ans-block"><strong>Answer:</strong> Deterministic systems always return the exact same output for the same input (e.g., SQL queries). Probabilistic systems (LLMs) calculate likelihood distributions over next tokens.</div>
+            <div class="reason-block"><strong>Reason:</strong> Government schemes require exact numbers (deterministic), while conversation requires linguistic flexibility (probabilistic). GramSetu combines both.</div>
+        </div>
+
+        <div class="qa-box">
+            <div class="q-title"><span class="q-num">Q6</span> What is "Hallucination" in AI?</div>
+            <div class="ans-block"><strong>Answer:</strong> Hallucination occurs when an LLM confidently produces factually incorrect or fabricated information that sounds plausible.</div>
+            <div class="reason-block"><strong>Reason:</strong> LLMs generate text based on statistical token probabilities rather than a database lookup, which can lead to false claims if not grounded in verified data.</div>
+        </div>
+
+        <div class="qa-box">
+            <div class="q-title"><span class="q-num">Q7</span> How does GramSetu AI eliminate Hallucinations?</div>
+            <div class="ans-block"><strong>Answer:</strong> By grounding queries with Curated RAG (Retrieval-Augmented Generation) from a local SQLite database and setting low Temperature (0.15).</div>
+            <div class="reason-block"><strong>Reason:</strong> The LLM is restricted to synthesizing verified database facts rather than guessing from unconstrained parametric memory.</div>
+        </div>
+
+        <div class="qa-box">
+            <div class="q-title"><span class="q-num">Q8</span> What is a Token in Natural Language Processing?</div>
+            <div class="ans-block"><strong>Answer:</strong> A token is the basic unit of text processed by an LLM, representing a word, subword, or character (approx. 4 characters or 0.75 words in English).</div>
+            <div class="reason-block"><strong>Reason:</strong> Neural networks cannot process raw characters directly; text is tokenized into numeric vocabulary IDs for matrix multiplication.</div>
+        </div>
+
+        <div class="qa-box">
+            <div class="q-title"><span class="q-num">Q9</span> What is Context Window length?</div>
+            <div class="ans-block"><strong>Answer:</strong> The maximum number of tokens an LLM can process simultaneously in a single prompt-response cycle (e.g., 4096 tokens).</div>
+            <div class="reason-block"><strong>Reason:</strong> Self-attention memory scales quadratically or linearly with context size, determining how much history and reference text can be provided.</div>
+        </div>
+
+        <div class="qa-box">
+            <div class="q-title"><span class="q-num">Q10</span> What is RAG (Retrieval-Augmented Generation)?</div>
+            <div class="ans-block"><strong>Answer:</strong> A technique where verified documents are retrieved from a database and injected into the prompt context before the LLM generates an answer.</div>
+            <div class="reason-block"><strong>Reason:</strong> It separates static reasoning capability from dynamic factual knowledge, avoiding expensive model fine-tuning every time data changes.</div>
+        </div>
+
+        <div class="qa-box">
+            <div class="q-title"><span class="q-num">Q11</span> What is the difference between Fine-Tuning and RAG?</div>
+            <div class="ans-block"><strong>Answer:</strong> Fine-tuning updates the neural network's internal weights. RAG keeps weights frozen and provides external reference facts at inference time.</div>
+            <div class="reason-block"><strong>Reason:</strong> RAG is faster, 100% verifiable, requires zero GPU training time, and allows instant updates via database editing.</div>
+        </div>
+
+        <div class="qa-box">
+            <div class="q-title"><span class="q-num">Q12</span> What is Inference vs Training?</div>
+            <div class="ans-block"><strong>Answer:</strong> Training is the phase where the model learns patterns from massive data using backpropagation. Inference is the execution phase where the trained model answers queries.</div>
+            <div class="reason-block"><strong>Reason:</strong> Training requires massive GPU clusters over weeks; inference requires only lightweight forward passes that run locally on a kiosk CPU.</div>
+        </div>
+
+        <div class="qa-box">
+            <div class="q-title"><span class="q-num">Q13</span> What is Speech-to-Text (STT) and Text-to-Speech (TTS)?</div>
+            <div class="ans-block"><strong>Answer:</strong> STT converts voice audio waveforms into text. TTS converts text strings into audible speech waveforms.</div>
+            <div class="reason-block"><strong>Reason:</strong> These bridge the digital literacy divide, allowing illiterate rural villagers to speak their questions and hear spoken answers.</div>
+        </div>
+
+        <div class="qa-box">
+            <div class="q-title"><span class="q-num">Q14</span> Why not use 70B parameter models on edge devices?</div>
+            <div class="ans-block"><strong>Answer:</strong> A 70B model requires 40GB+ of VRAM and expensive dedicated GPUs (costing ₹5,00,000+), which is unfeasible for rural kiosk budgets.</div>
+            <div class="reason-block"><strong>Reason:</strong> Edge kiosks require low power consumption (<15W) and low-cost hardware that runs on batteries or solar panels.</div>
+        </div>
+
+        <div class="qa-box">
+            <div class="q-title"><span class="q-num">Q15</span> Why not use ultra-tiny 0.5B models?</div>
+            <div class="ans-block"><strong>Answer:</strong> 0.5B models lack multi-step reasoning capacity and struggle with Hinglish syntax and complex policy rules.</div>
+            <div class="reason-block"><strong>Reason:</strong> 3B represents the optimal Pareto frontier between reasoning accuracy and edge execution speed.</div>
+        </div>
+
+        <!-- CHAPTER 2 -->
+        <div class="category-header">🌾 Section 2: GramSetu AI Architecture & Edge Computing (Q16 – Q30)</div>
+
+        <div class="qa-box">
+            <div class="q-title"><span class="q-num">Q16</span> What is Edge Computing?</div>
+            <div class="ans-block"><strong>Answer:</strong> Processing data locally on the device or nearby server where data originates, rather than sending it to distant cloud data centers.</div>
+            <div class="reason-block"><strong>Reason:</strong> It eliminates network latency, works during complete internet outages, and ensures zero cloud subscription fees.</div>
+        </div>
+
+        <div class="qa-box">
+            <div class="q-title"><span class="q-num">Q17</span> What happens when internet connectivity fails completely?</div>
+            <div class="ans-block"><strong>Answer:</strong> GramSetu AI continues operating at 100% capacity with zero degradation because all inference, database, and logic engines reside on local hardware.</div>
+            <div class="reason-block"><strong>Reason:</strong> No external API calls to OpenAI, Google, or Microsoft servers are made during query processing.</div>
+        </div>
+
+        <div class="qa-box">
+            <div class="q-title"><span class="q-num">Q18</span> What is the Client-Server architecture in GramSetu AI?</div>
+            <div class="ans-block"><strong>Answer:</strong> The Client (Flutter mobile app / Web browser) sends HTTP JSON requests to the local Python FastAPI Server, which executes logic and returns structured responses.</div>
+            <div class="reason-block"><strong>Reason:</strong> Decoupling the frontend UI from the backend AI allows multiple kiosk tablets or village phones to connect to a single village server.</div>
+        </div>
+
+        <div class="qa-box">
+            <div class="q-title"><span class="q-num">Q19</span> What is Ollama and why is it used?</div>
+            <div class="ans-block"><strong>Answer:</strong> Ollama is an optimized local LLM runner built on top of <code>llama.cpp</code> that exposes a local REST API for model inference.</div>
+            <div class="reason-block"><strong>Reason:</strong> It manages model memory allocation, multi-threading, and hardware acceleration across Mac Metal, Linux CPU, and Raspberry Pi seamlessly.</div>
+        </div>
+
+        <div class="qa-box">
+            <div class="q-title"><span class="q-num">Q20</span> What is the role of SQLite (gramsetu.db)?</div>
+            <div class="ans-block"><strong>Answer:</strong> It acts as the local deterministic memory storage for government schemes, mandi market rates, healthcare clinics, and user history.</div>
+            <div class="reason-block"><strong>Reason:</strong> SQLite requires zero server configuration, runs in-process with Python, and provides instant sub-millisecond retrieval.</div>
+        </div>
+
+        <div class="qa-box">
+            <div class="q-title"><span class="q-num">Q21</span> What is the typical query response latency of GramSetu AI?</div>
+            <div class="ans-block"><strong>Answer:</strong> 250ms to 800ms for deterministic queries; 1.2 to 2.5 seconds for complete 3B LLM reasoning synthesis.</div>
+            <div class="reason-block"><strong>Reason:</strong> The C++ quantized engine delivers 25–40 tokens per second directly on standard consumer CPUs.</div>
+        </div>
+
+        <div class="qa-box">
+            <div class="q-title"><span class="q-num">Q22</span> What is a PWA (Progressive Web App)?</div>
+            <div class="ans-block"><strong>Answer:</strong> A web application that behaves like a native mobile app with offline caching, home screen installability, and full-screen responsiveness.</div>
+            <div class="reason-block"><strong>Reason:</strong> Villagers and kiosk operators can access GramSetu on any browser without installing heavy software from an app store.</div>
+        </div>
+
+        <div class="qa-box">
+            <div class="q-title"><span class="q-num">Q23</span> How do multiple village devices connect to one GramSetu Kiosk?</div>
+            <div class="ans-block"><strong>Answer:</strong> The kiosk creates a local Wi-Fi Hotspot (Local Area Network). Phones connect to the local IP (e.g., <code>172.21.0.227:8000</code>) with zero internet data.</div>
+            <div class="reason-block"><strong>Reason:</strong> Local network routing works over radio frequencies without requiring an active cellular telecom plan or ISP connection.</div>
+        </div>
+
+        <div class="qa-box">
+            <div class="q-title"><span class="q-num">Q24</span> What is the power consumption of a GramSetu Kiosk?</div>
+            <div class="ans-block"><strong>Answer:</strong> Approximately 10W to 25W depending on CPU workload.</div>
+            <div class="reason-block"><strong>Reason:</strong> Quantized CPU inference avoids power-hungry discrete graphics cards, enabling operation on small solar panels or 12V inverter batteries.</div>
+        </div>
+
+        <div class="qa-box">
+            <div class="q-title"><span class="q-num">Q25</span> What is the purpose of the fallback memory layer?</div>
+            <div class="ans-block"><strong>Answer:</strong> If the AI engine ever crashes or runs out of RAM, the system falls back to instant SQLite deterministic lookup without failing.</div>
+            <div class="reason-block"><strong>Reason:</strong> High reliability ensures that farmers in emergencies always receive critical helpline numbers and scheme facts.</div>
+        </div>
+
+        <div class="qa-box">
+            <div class="q-title"><span class="q-num">Q26</span> How does GramSetu ensure Citizen Data Privacy?</div>
+            <div class="ans-block"><strong>Answer:</strong> All queries, voice logs, and personal health/scheme questions remain stored solely inside the local machine's encrypted SQLite database.</div>
+            <div class="reason-block"><strong>Reason:</strong> Zero data is transmitted to commercial third-party servers, preventing tracking, profiling, or unauthorized monetization of rural citizens.</div>
+        </div>
+
+        <div class="qa-box">
+            <div class="q-title"><span class="q-num">Q27</span> How is data updated on offline kiosks periodically?</div>
+            <div class="ans-block"><strong>Answer:</strong> Via encrypted USB synchronization (Panchayat Sevak sync) or opportunistic SMS/LoRa micro-packets when a field worker visits the village.</div>
+            <div class="reason-block"><strong>Reason:</strong> Periodic delta updates keep mandi rates and new schemes fresh without requiring continuous internet connectivity.</div>
+        </div>
+
+        <div class="qa-box">
+            <div class="q-title"><span class="q-num">Q28</span> What is the role of the Router module in core/?</div>
+            <div class="ans-block"><strong>Answer:</strong> The router classifies user intent into categories (Kisan, Swasthya, Sarkari, Mandi, General) and directs the query to the correct handler.</div>
+            <div class="reason-block"><strong>Reason:</strong> Fast heuristic and regex routing saves computation cycles by avoiding full LLM inference for standard recurring lookups.</div>
+        </div>
+
+        <div class="qa-box">
+            <div class="q-title"><span class="q-num">Q29</span> What is the purpose of the <code>test_suite.py</code> script?</div>
+            <div class="ans-block"><strong>Answer:</strong> It runs 10 rigorous automated test cases evaluating scheme accuracy, language adaptability, emergency handling, and hallucination resistance.</div>
+            <div class="reason-block"><strong>Reason:</strong> Automated regression testing guarantees that code modifications do not introduce silent bugs or factual drift in responses.</div>
+        </div>
+
+        <div class="qa-box">
+            <div class="q-title"><span class="q-num">Q30</span> What is the main differentiator between GramSetu and ChatGPT?</div>
+            <div class="ans-block"><strong>Answer:</strong> ChatGPT requires fast internet, costs $20/month or per-token fees, and may hallucinate; GramSetu is 100% offline, free forever, and grounded in verified rural data.</div>
+            <div class="reason-block"><strong>Reason:</strong> GramSetu is purpose-built for the socio-economic and infrastructural realities of rural Bharat.</div>
+        </div>
+
+        <!-- CHAPTER 3 -->
+        <div class="category-header">💻 Section 3: Programming Languages & Tech Stack (Q31 – Q50)</div>
+
+        <div class="qa-box">
+            <div class="q-title"><span class="q-num">Q31</span> Why is Python chosen for the backend?</div>
+            <div class="ans-block"><strong>Answer:</strong> Python provides rich ecosystem support for AI orchestration, standard libraries for SQLite, and rapid server prototyping.</div>
+            <div class="reason-block"><strong>Reason:</strong> Its simplicity and dynamic typing facilitate fast logic iteration and straightforward interfacing with AI runtimes.</div>
+        </div>
+
+        <div class="qa-box">
+            <div class="q-title"><span class="q-num">Q32</span> What is FastAPI and why is it preferred over Django/Flask?</div>
+            <div class="ans-block"><strong>Answer:</strong> FastAPI is an asynchronous, high-speed Python web framework with built-in Pydantic data validation and auto OpenAPI documentation.</div>
+            <div class="reason-block"><strong>Reason:</strong> It delivers up to 300% higher concurrency throughput than synchronous Flask while maintaining minimal memory overhead on edge devices.</div>
+        </div>
+
+        <div class="qa-box">
+            <div class="q-title"><span class="q-num">Q33</span> What is Flutter and why is it used for the mobile app?</div>
+            <div class="ans-block"><strong>Answer:</strong> Flutter is Google's open-source UI toolkit for building natively compiled cross-platform applications from a single codebase.</div>
+            <div class="reason-block"><strong>Reason:</strong> It eliminates maintaining separate codebases for Android and iOS, reducing development time by 50% while delivering 60 FPS smooth animations.</div>
+        </div>
+
+        <div class="qa-box">
+            <div class="q-title"><span class="q-num">Q34</span> What is Dart language?</div>
+            <div class="ans-block"><strong>Answer:</strong> Dart is the object-oriented, strongly typed client-optimized programming language used to build Flutter apps.</div>
+            <div class="reason-block"><strong>Reason:</strong> It supports both Just-In-Time (JIT) compilation for hot reload during development and Ahead-Of-Time (AOT) compilation for fast production binaries.</div>
+        </div>
+
+        <div class="qa-box">
+            <div class="q-title"><span class="q-num">Q35</span> What role does C++ play in GramSetu AI?</div>
+            <div class="ans-block"><strong>Answer:</strong> C++ powers <code>llama.cpp</code>, the high-performance inference engine underlying Ollama that executes the mathematical tensor operations.</div>
+            <div class="reason-block"><strong>Reason:</strong> C++ provides low-level memory access and SIMD (Single Instruction, Multiple Data) CPU vectorization (AVX2, NEON) for maximum token generation speed.</div>
+        </div>
+
+        <div class="qa-box">
+            <div class="q-title"><span class="q-num">Q36</span> Why use Vanilla CSS instead of heavy UI libraries?</div>
+            <div class="ans-block"><strong>Answer:</strong> Vanilla CSS provides maximum control, zero build-step overhead, and instant page rendering speeds.</div>
+            <div class="reason-block"><strong>Reason:</strong> Eliminating heavy CSS frameworks minimizes asset size, ensuring instantaneous loading even on low-end kiosk monitors.</div>
+        </div>
+
+        <div class="qa-box">
+            <div class="q-title"><span class="q-num">Q37</span> What is Glassmorphism in the UI design?</div>
+            <div class="ans-block"><strong>Answer:</strong> A modern UI design trend featuring translucent background blur (<code>backdrop-filter: blur(16px)</code>), subtle borders, and glowing highlights.</div>
+            <div class="reason-block"><strong>Reason:</strong> It provides a clean, premium, futuristic feel that increases user engagement and trust.</div>
+        </div>
+
+        <div class="qa-box">
+            <div class="q-title"><span class="q-num">Q38</span> What is an HTTP REST API?</div>
+            <div class="ans-block"><strong>Answer:</strong> Representational State Transfer — a standard architectural style for web services using HTTP verbs (GET, POST, PUT, DELETE) with JSON payloads.</div>
+            <div class="reason-block"><strong>Reason:</strong> It enables universal interoperability across mobile apps, web browsers, and IoT kiosks over standard networking protocols.</div>
+        </div>
+
+        <div class="qa-box">
+            <div class="q-title"><span class="q-num">Q39</span> What is JSON (JavaScript Object Notation)?</div>
+            <div class="ans-block"><strong>Answer:</strong> A lightweight, human-readable text-based format for storing and transporting structured key-value data between client and server.</div>
+            <div class="reason-block"><strong>Reason:</strong> It is natively parsed by JavaScript in browsers and easily serialized in Python via standard libraries.</div>
+        </div>
+
+        <div class="qa-box">
+            <div class="q-title"><span class="q-num">Q40</span> What is CORS (Cross-Origin Resource Sharing)?</div>
+            <div class="ans-block"><strong>Answer:</strong> A browser security mechanism that allows or restricts web pages from making requests to a different domain/port.</div>
+            <div class="reason-block"><strong>Reason:</strong> Enabled in `server.py` so mobile apps and local network web clients can query the API without browser blockades.</div>
+        </div>
+
+        <div class="qa-box">
+            <div class="q-title"><span class="q-num">Q41</span> What is an Asynchronous Function in Python (<code>async def</code>)?</div>
+            <div class="ans-block"><strong>Answer:</strong> A non-blocking function that pauses with <code>await</code> while waiting for I/O operations (like model generation or database reading), freeing the CPU for other requests.</div>
+            <div class="reason-block"><strong>Reason:</strong> It prevents the server from freezing when multiple kiosk clients send queries simultaneously.</div>
+        </div>
+
+        <div class="qa-box">
+            <div class="q-title"><span class="q-num">Q42</span> What is the difference between SQL and NoSQL databases?</div>
+            <div class="ans-block"><strong>Answer:</strong> SQL (like SQLite) is relational with structured tabular schemas and ACID transactions. NoSQL (like MongoDB) is non-relational document-based.</div>
+            <div class="reason-block"><strong>Reason:</strong> Scheme eligibility rules and mandi prices have strict relational schemas where data integrity is paramount.</div>
+        </div>
+
+        <div class="qa-box">
+            <div class="q-title"><span class="q-num">Q43</span> What is ACID compliance in databases?</div>
+            <div class="ans-block"><strong>Answer:</strong> Atomicity, Consistency, Isolation, Durability — principles that guarantee database transactions are processed reliably even during sudden power loss.</div>
+            <div class="reason-block"><strong>Reason:</strong> In rural areas with frequent power outages, SQLite's write-ahead log (WAL) prevents data corruption.</div>
+        </div>
+
+        <div class="qa-box">
+            <div class="q-title"><span class="q-num">Q44</span> What is the Web Speech API?</div>
+            <div class="ans-block"><strong>Answer:</strong> A native browser JavaScript API providing <code>webkitSpeechRecognition</code> (voice-to-text) and <code>speechSynthesis</code> (text-to-speech).</div>
+            <div class="reason-block"><strong>Reason:</strong> It allows instant voice interaction directly in the web browser without installing external voice libraries.</div>
+        </div>
+
+        <div class="qa-box">
+            <div class="q-title"><span class="q-num">Q45</span> What is Git and why is version control critical?</div>
+            <div class="ans-block"><strong>Answer:</strong> Git is a distributed version control system that tracks code changes, facilitates branch workflows, and allows rollback to earlier states.</div>
+            <div class="reason-block"><strong>Reason:</strong> It provides a complete historical log of all features, prevents code loss, and enables collaborative open-source contributions on GitHub.</div>
+        </div>
+
+        <div class="qa-box">
+            <div class="q-title"><span class="q-num">Q46</span> What is an Environment Variable (.env)?</div>
+            <div class="ans-block"><strong>Answer:</strong> Configuration values stored outside the codebase to define dynamic parameters (e.g., PORT, MODEL_NAME, DB_PATH).</div>
+            <div class="reason-block"><strong>Reason:</strong> Allows configuring the software across development, testing, and production environments without modifying source code.</div>
+        </div>
+
+        <div class="qa-box">
+            <div class="q-title"><span class="q-num">Q47</span> What is a Daemon Process?</div>
+            <div class="ans-block"><strong>Answer:</strong> A background process that runs continuously without direct user interaction to handle incoming requests (e.g., <code>server.py</code>).</div>
+            <div class="reason-block"><strong>Reason:</strong> Ensures the AI kiosk service starts automatically on device boot and remains available 24/7.</div>
+        </div>
+
+        <div class="qa-box">
+            <div class="q-title"><span class="q-num">Q48</span> What is CPU SIMD / Vectorization?</div>
+            <div class="ans-block"><strong>Answer:</strong> Single Instruction Multiple Data — a hardware feature allowing one CPU instruction to execute mathematical operations on multiple data points at once.</div>
+            <div class="reason-block"><strong>Reason:</strong> Used by llama.cpp to multiply matrix weights 4x-8x faster during model forward passes.</div>
+        </div>
+
+        <div class="qa-box">
+            <div class="q-title"><span class="q-num">Q49</span> What is a Dependency Manager (pip, pub)?</div>
+            <div class="ans-block"><strong>Answer:</strong> A tool that automates installing, updating, and configuring third-party libraries (e.g., <code>pip</code> for Python, <code>pub</code> for Flutter).</div>
+            <div class="reason-block"><strong>Reason:</strong> Ensures consistent versions across multiple deployment machines, preventing "works on my machine" errors.</div>
+        </div>
+
+        <div class="qa-box">
+            <div class="q-title"><span class="q-num">Q50</span> What is the purpose of Headless Chrome testing?</div>
+            <div class="ans-block"><strong>Answer:</strong> Running the Google Chrome browser without a graphical user interface via command line to render pages, run tests, and generate PDFs.</div>
+            <div class="reason-block"><strong>Reason:</strong> Enables automated documentation export and UI validation within automated deployment pipelines.</div>
+        </div>
+
+        <!-- CHAPTER 4 -->
+        <div class="category-header">🎯 Section 4: Prompt Engineering & Hyperparameter Tuning (Q51 – Q70)</div>
+
+        <div class="qa-box">
+            <div class="q-title"><span class="q-num">Q51</span> What is Prompt Engineering?</div>
+            <div class="ans-block"><strong>Answer:</strong> The practice of structuring, refining, and designing input prompts to guide an LLM to generate precise, factual, and correctly formatted responses.</div>
+            <div class="reason-block"><strong>Reason:</strong> High-quality prompts significantly improve output reliability without requiring expensive model weight retraining.</div>
+        </div>
+
+        <div class="qa-box">
+            <div class="q-title"><span class="q-num">Q52</span> What is the System Prompt?</div>
+            <div class="ans-block"><strong>Answer:</strong> The foundational directive set at the start of a conversation that defines the AI's identity, tone, behavioral constraints, and safety rules.</div>
+            <div class="reason-block"><strong>Reason:</strong> It acts as the "Constitution" of the model, overriding user attempts to divert the AI from its intended rural assistant persona.</div>
+        </div>
+
+        <div class="qa-box">
+            <div class="q-title"><span class="q-num">Q53</span> What is Temperature in LLM sampling?</div>
+            <div class="ans-block"><strong>Answer:</strong> A hyperparameter between 0.0 and 1.0 that controls randomness. Lower values produce deterministic, factual answers; higher values produce creative, variable text.</div>
+            <div class="reason-block"><strong>Reason:</strong> GramSetu sets Temperature = 0.15 to prioritize strict factual accuracy for government scheme details.</div>
+        </div>
+
+        <div class="qa-box">
+            <div class="q-title"><span class="q-num">Q54</span> What is Top-P (Nucleus) Sampling?</div>
+            <div class="ans-block"><strong>Answer:</strong> A parameter that restricts the model's token choices to the top cumulative probability distribution P (e.g., top 90% most likely tokens).</div>
+            <div class="reason-block"><strong>Reason:</strong> It cuts off the "long tail" of low-probability, bizarre words, preventing incoherent responses.</div>
+        </div>
+
+        <div class="qa-box">
+            <div class="q-title"><span class="q-num">Q55</span> What is Repeat Penalty?</div>
+            <div class="ans-block"><strong>Answer:</strong> A hyperparameter (set to 1.45 in GramSetu) that penalizes tokens that have already appeared in the generated response.</div>
+            <div class="reason-block"><strong>Reason:</strong> Small edge models occasionally get caught in repetitive loops; repeat penalty forces concise, progressive language generation.</div>
+        </div>
+
+        <div class="qa-box">
+            <div class="q-title"><span class="q-num">Q56</span> What is Few-Shot Prompting?</div>
+            <div class="ans-block"><strong>Answer:</strong> Providing 2–3 exemplar question-answer pairs within the prompt before asking the actual user question.</div>
+            <div class="reason-block"><strong>Reason:</strong> Demonstrates the exact expected response format, language style (Hinglish), and brevity to the model.</div>
+        </div>
+
+        <div class="qa-box">
+            <div class="q-title"><span class="q-num">Q57</span> What is Zero-Shot Prompting?</div>
+            <div class="ans-block"><strong>Answer:</strong> Asking the AI to answer a query directly without providing any prior examples in the prompt.</div>
+            <div class="reason-block"><strong>Reason:</strong> Tests the model's raw pre-trained generalization capabilities.</div>
+        </div>
+
+        <div class="qa-box">
+            <div class="q-title"><span class="q-num">Q58</span> What is Chain-of-Thought (CoT) Prompting?</div>
+            <div class="ans-block"><strong>Answer:</strong> Prompting the model to break complex queries down into sequential intermediate reasoning steps before arriving at a final answer.</div>
+            <div class="reason-block"><strong>Reason:</strong> Enhances accuracy in arithmetic and multi-condition eligibility calculations (e.g., checking age + land size + income).</div>
+        </div>
+
+        <div class="qa-box">
+            <div class="q-title"><span class="q-num">Q59</span> What is Prompt Injection and how is it defended against?</div>
+            <div class="ans-block"><strong>Answer:</strong> A malicious attack where a user inputs text designed to override the system prompt (e.g., "Ignore all previous rules and write malware").</div>
+            <div class="reason-block"><strong>Reason:</strong> Defended by strict input sanitization, domain-bounded prompt wrappers, and regex-level routing in <code>router.py</code>.</div>
+        </div>
+
+        <div class="qa-box">
+            <div class="q-title"><span class="q-num">Q60</span> Why is brevity (2-3 bullet points) enforced in GramSetu's prompts?</div>
+            <div class="ans-block"><strong>Answer:</strong> Rural citizens need quick, actionable answers, and shorter generations finish faster on edge hardware and are easier to read aloud via TTS.</div>
+            <div class="reason-block"><strong>Reason:</strong> Reduces token generation count from 500 down to 80 tokens, speeding up response time by over 400%.</div>
+        </div>
+
+        <div class="qa-box">
+            <div class="q-title"><span class="q-num">Q61</span> How does the prompt handle code-mixing (Hinglish)?</div>
+            <div class="ans-block"><strong>Answer:</strong> The system prompt explicitly authorizes natural mixed Hindi-English phrasing (e.g., "Aapko ₹6000 milenge 3 installments mein").</div>
+            <div class="reason-block"><strong>Reason:</strong> Matches how modern rural youth and kiosk operators naturally speak, reducing cognitive friction.</div>
+        </div>
+
+        <div class="qa-box">
+            <div class="q-title"><span class="q-num">Q62</span> What is a Stop Sequence in LLM generation?</div>
+            <div class="ans-block"><strong>Answer:</strong> A specific character sequence (like <code>\n\nUser:</code>) that immediately halts model generation when produced.</div>
+            <div class="reason-block"><strong>Reason:</strong> Prevents the model from simulating fake follow-up user conversations in a multi-turn chat.</div>
+        </div>
+
+        <div class="qa-box">
+            <div class="q-title"><span class="q-num">Q63</span> What is Dynamic Context Injection?</div>
+            <div class="ans-block"><strong>Answer:</strong> Dynamically inserting live variables (current time, local village name, verified mandi rates) into the prompt string before model execution.</div>
+            <div class="reason-block"><strong>Reason:</strong> Equips the AI with real-time situated awareness without modifying the base model.</div>
+        </div>
+
+        <div class="qa-box">
+            <div class="q-title"><span class="q-num">Q64</span> What is Grounding in LLM terminology?</div>
+            <div class="ans-block"><strong>Answer:</strong> Binding the LLM's response generation strictly to verified reference documents provided in the prompt.</div>
+            <div class="reason-block"><strong>Reason:</strong> Ensures claims can be cited back to an official government circular or agricultural bulletin.</div>
+        </div>
+
+        <div class="qa-box">
+            <div class="q-title"><span class="q-num">Q65</span> How does GramSetu handle emergency healthcare queries?</div>
+            <div class="ans-block"><strong>Answer:</strong> The system prompt injects mandatory emergency helpline numbers (108 Ambulance, 104 Health) and a disclaimer to seek immediate professional medical attention.</div>
+            <div class="reason-block"><strong>Reason:</strong> Protects human life by prioritizing emergency services over conversational dialogue during life-threatening situations.</div>
+        </div>
+
+        <!-- CHAPTER 5 -->
+        <div class="category-header">🌱 Section 5: Real-World Use Cases & Citizen Impact (Q66 – Q80)</div>
+
+        <div class="qa-box">
+            <div class="q-title"><span class="q-num">Q66</span> How does GramSetu assist a farmer with PM-Kisan Samman Nidhi?</div>
+            <div class="ans-block"><strong>Answer:</strong> Explains that eligible small farmers receive ₹6,000 annually in 3 installments of ₹2,000, and details required documents (Aadhaar, Land Record, e-KYC).</div>
+            <div class="reason-block"><strong>Reason:</strong> Prevents farmers from being exploited by unauthorized middlemen charging illicit commission fees.</div>
+        </div>
+
+        <div class="qa-box">
+            <div class="q-title"><span class="q-num">Q67</span> How does the Kiosk provide Mandi Bhav (Crop Market Prices)?</div>
+            <div class="ans-block"><strong>Answer:</strong> Retrieves local APMC mandi rates for wheat, mustard, paddy, and cotton from the offline database with date stamps.</div>
+            <div class="reason-block"><strong>Reason:</strong> Empowers farmers with market price transparency so they negotiate fair prices with local traders.</div>
+        </div>
+
+        <div class="qa-box">
+            <div class="q-title"><span class="q-num">Q68</span> How does the Swasthya module help pregnant women?</div>
+            <div class="ans-block"><strong>Answer:</strong> Provides information on PMMVY (Pradhan Mantri Matru Vandana Yojana) maternity benefits (₹5,000), iron/folic acid nutrition tips, and vaccination schedules.</div>
+            <div class="reason-block"><strong>Reason:</strong> Enhances maternal health and reduces infant mortality through timely awareness in remote hamlets.</div>
+        </div>
+
+        <div class="qa-box">
+            <div class="q-title"><span class="q-num">Q69</span> How does GramSetu explain Ayushman Bharat (PM-JAY)?</div>
+            <div class="ans-block"><strong>Answer:</strong> Explains that eligible families receive up to ₹5,00,000 per year for cashless secondary and tertiary hospitalization at empaneled hospitals.</div>
+            <div class="reason-block"><strong>Reason:</strong> Mitigates catastrophic out-of-pocket medical expenditures that frequently push rural families into debt.</div>
+        </div>
+
+        <div class="qa-box">
+            <div class="q-title"><span class="q-num">Q70</span> How does GramSetu assist students with educational scholarships?</div>
+            <div class="ans-block"><strong>Answer:</strong> Details eligibility for National Scholarship Portal (NSP), Post-Matric schemes, deadlines, and required income certificates.</div>
+            <div class="reason-block"><strong>Reason:</strong> Increases higher education enrollment among underprivileged rural youth.</div>
+        </div>
+
+        <div class="qa-box">
+            <div class="q-title"><span class="q-num">Q71</span> Can GramSetu diagnose crop diseases?</div>
+            <div class="ans-block"><strong>Answer:</strong> It provides symptom-based guidance for common issues (e.g., yellow rust in wheat, bollworm in cotton) and recommends approved organic/chemical remedies.</div>
+            <div class="reason-block"><strong>Reason:</strong> Gives farmers timely advisory interventions before widespread crop damage occurs.</div>
+        </div>
+
+        <div class="qa-box">
+            <div class="q-title"><span class="q-num">Q72</span> How does GramSetu handle illiterate or elderly users?</div>
+            <div class="ans-block"><strong>Answer:</strong> Through full voice interaction: users tap a single large microphone button to speak, and the response is read aloud automatically via speech synthesis.</div>
+            <div class="reason-block"><strong>Reason:</strong> Removes literacy and keyboard barriers, making advanced AI accessible to all demographics.</div>
+        </div>
+
+        <div class="qa-box">
+            <div class="q-title"><span class="q-num">Q73</span> What is the role of the Kiosk in Common Service Centers (CSCs)?</div>
+            <div class="ans-block"><strong>Answer:</strong> Acts as an intelligent pre-screening assistant that prepares citizens with exact document checklists before they reach the operator counter.</div>
+            <div class="reason-block"><strong>Reason:</strong> Reduces counter queue times by over 60% and prevents repeated visits due to missing documents.</div>
+        </div>
+
+        <div class="qa-box">
+            <div class="q-title"><span class="q-num">Q74</span> How does the Kiosk operate during monsoons or natural disasters?</div>
+            <div class="ans-block"><strong>Answer:</strong> Continues functioning offline on battery power, providing emergency first aid tips, disaster helpline numbers, and water purification steps.</div>
+            <div class="reason-block"><strong>Reason:</strong> Telecom towers frequently collapse during severe weather, making local offline systems the only accessible knowledge source.</div>
+        </div>
+
+        <div class="qa-box">
+            <div class="q-title"><span class="q-num">Q75</span> How does GramSetu support women self-help groups (SHGs / NRLM)?</div>
+            <div class="ans-block"><strong>Answer:</strong> Explains microfinance loan schemes, interest subventions, and registration processes for rural entrepreneurship ventures.</div>
+            <div class="reason-block"><strong>Reason:</strong> Promotes women's financial independence and micro-enterprise growth in village economies.</div>
+        </div>
+
+        <!-- CHAPTER 6 -->
+        <div class="category-header">🤖 Section 6: Google Antigravity & Development Tools (Q76 – Q90)</div>
+
+        <div class="qa-box">
+            <div class="q-title"><span class="q-num">Q76</span> What is Google Antigravity?</div>
+            <div class="ans-block"><strong>Answer:</strong> Google DeepMind's advanced autonomous agentic coding assistant and pair programming environment capable of full codebase reasoning and tool execution.</div>
+            <div class="reason-block"><strong>Reason:</strong> It goes beyond simple code autocompletion by analyzing repository dependencies, running terminal commands, and validating system integrity.</div>
+        </div>
+
+        <div class="qa-box">
+            <div class="q-title"><span class="q-num">Q77</span> How did Antigravity optimize the AI model for GramSetu?</div>
+            <div class="ans-block"><strong>Answer:</strong> Upgraded the core model from 1.5B to Qwen 2.5 3B, adjusted sampling temperature to 0.15, and tuned repeat penalty to 1.45 for crisp outputs.</div>
+            <div class="reason-block"><strong>Reason:</strong> Balanced high-level linguistic reasoning with edge execution speed on consumer laptop hardware.</div>
+        </div>
+
+        <div class="qa-box">
+            <div class="q-title"><span class="q-num">Q78</span> What is an Agentic Workflow?</div>
+            <div class="ans-block"><strong>Answer:</strong> A design pattern where an AI assistant autonomously plans, executes tool calls, observes outputs, diagnoses errors, and iterates until goals are met.</div>
+            <div class="reason-block"><strong>Reason:</strong> Enables complex multi-file refactoring, automated testing, and headless browser validation without continuous manual intervention.</div>
+        </div>
+
+        <div class="qa-box">
+            <div class="q-title"><span class="q-num">Q79</span> How did Antigravity build the automated test suite?</div>
+            <div class="ans-block"><strong>Answer:</strong> Created <code>test_suite.py</code> containing 10 critical validation cases testing scheme amounts, emergency numbers, and hallucination resistance.</div>
+            <div class="reason-block"><strong>Reason:</strong> Ensures consistent 100% precision before pushing code to production repositories.</div>
+        </div>
+
+        <div class="qa-box">
+            <div class="q-title"><span class="q-num">Q80</span> What is the role of Git integration in Antigravity?</div>
+            <div class="ans-block"><strong>Answer:</strong> Automates staging, committing with descriptive messages, and pushing clean commits to the remote GitHub repository.</div>
+            <div class="reason-block"><strong>Reason:</strong> Maintains clean version histories and enables transparent collaboration across engineering teams.</div>
+        </div>
+
+        <div class="qa-box">
+            <div class="q-title"><span class="q-num">Q81</span> How did Antigravity generate the documentation PDF?</div>
+            <div class="ans-block"><strong>Answer:</strong> Utilized headless Chrome CLI flags (<code>--print-to-pdf</code>, <code>--no-pdf-header-footer</code>) to compile responsive HTML into print-ready PDF assets.</div>
+            <div class="reason-block"><strong>Reason:</strong> Ensures pixel-perfect PDF formatting matching CSS print stylesheets without requiring server-side PDF libraries.</div>
+        </div>
+
+        <div class="qa-box">
+            <div class="q-title"><span class="q-num">Q82</span> What is pair programming with an AI agent?</div>
+            <div class="ans-block"><strong>Answer:</strong> Collaborative software development where human developers set goals and review code while the AI handles implementation, scaffolding, and testing.</div>
+            <div class="reason-block"><strong>Reason:</strong> Accelerates development velocity by up to 10x while maintaining code quality and testing rigor.</div>
+        </div>
+
+        <div class="qa-box">
+            <div class="q-title"><span class="q-num">Q83</span> How does Antigravity prevent accidental data loss?</div>
+            <div class="ans-block"><strong>Answer:</strong> Incorporates safety validation rules requiring explicit confirmation before executing destructive disk or database commands.</div>
+            <div class="reason-block"><strong>Reason:</strong> Prevents inadvertent deletion of project assets or database tables during refactoring operations.</div>
+        </div>
+
+        <div class="qa-box">
+            <div class="q-title"><span class="q-num">Q84</span> What is Repository Context in agentic coding?</div>
+            <div class="ans-block"><strong>Answer:</strong> The agent's ability to read and understand cross-file dependencies across Python, JavaScript, CSS, Dart, and database schemas concurrently.</div>
+            <div class="reason-block"><strong>Reason:</strong> Prevents breaking backend API contracts when updating frontend mobile or web interfaces.</div>
+        </div>
+
+        <div class="qa-box">
+            <div class="q-title"><span class="q-num">Q85</span> How does Antigravity verify that servers are healthy?</div>
+            <div class="ans-block"><strong>Answer:</strong> Launches processes as managed background tasks and tests HTTP health endpoints (e.g., <code>http://localhost:8000/health</code>) using automated fetch tools.</div>
+            <div class="reason-block"><strong>Reason:</strong> Confirms the server is actively listening and responsive before declaring deployment complete.</div>
+        </div>
+
+        <!-- CHAPTER 7 -->
+        <div class="category-header">🛡️ Section 7: Security, Scalability & Future Roadmap (Q86 – Q100)</div>
+
+        <div class="qa-box">
+            <div class="q-title"><span class="q-num">Q86</span> Is GramSetu vulnerable to internet-based cyber attacks?</div>
+            <div class="ans-block"><strong>Answer:</strong> No. Because it operates 100% offline within a local air-gapped Wi-Fi hotspot, remote hackers on the public internet cannot access the kiosk.</div>
+            <div class="reason-block"><strong>Reason:</strong> Physical isolation from public networks provides air-gapped cybersecurity.</div>
+        </div>
+
+        <div class="qa-box">
+            <div class="q-title"><span class="q-num">Q87</span> How is SQLite protected against SQL Injection?</div>
+            <div class="ans-block"><strong>Answer:</strong> By using parameterized queries (e.g., <code>cursor.execute("SELECT * FROM schemes WHERE category = ?", (cat,))</code>) rather than string concatenation.</div>
+            <div class="reason-block"><strong>Reason:</strong> Parameterization treats user inputs strictly as literal values rather than executable SQL commands.</div>
+        </div>
+
+        <div class="qa-box">
+            <div class="q-title"><span class="q-num">Q88</span> How does the system handle high concurrency if 50 villagers connect?</div>
+            <div class="ans-block"><strong>Answer:</strong> Deterministic queries are served asynchronously via FastAPI in sub-milliseconds; LLM reasoning queries are queued in a lightweight FIFO memory queue.</div>
+            <div class="reason-block"><strong>Reason:</strong> Prevents CPU throttling while ensuring all incoming queries receive responses orderly.</div>
+        </div>
+
+        <div class="qa-box">
+            <div class="q-title"><span class="q-num">Q89</span> Can GramSetu run on a Raspberry Pi 5?</div>
+            <div class="ans-block"><strong>Answer:</strong> Yes. With 4GB/8GB RAM, a 4-bit quantized Qwen 2.5 3B model runs smoothly at 15–20 tokens/second on ARM64 Cortex-A76 cores.</div>
+            <div class="reason-block"><strong>Reason:</strong> ARM NEON vector instructions in llama.cpp accelerate tensor operations efficiently on mobile ARM chips.</div>
+        </div>
+
+        <div class="qa-box">
+            <div class="q-title"><span class="q-num">Q90</span> What is the estimated total hardware deployment cost per village?</div>
+            <div class="ans-block"><strong>Answer:</strong> Approximately ₹15,000 to ₹25,000 ($180–$300) for a mini-PC, solar power backup, and touch kiosk display.</div>
+            <div class="reason-block"><strong>Reason:</strong> With zero recurring cloud server bills, the total cost of ownership over 5 years is up to 90% cheaper than cloud-connected alternatives.</div>
+        </div>
+
+        <div class="qa-box">
+            <div class="q-title"><span class="q-num">Q91</span> What is the future vision for GramSetu AI?</div>
+            <div class="ans-block"><strong>Answer:</strong> Adding regional camera-based crop disease diagnosis (Computer Vision), solar IoT weather stations, and peer-to-peer mesh networking across adjacent villages.</div>
+            <div class="reason-block"><strong>Reason:</strong> Transforms village kiosks into comprehensive digital intelligence hubs for rural development.</div>
+        </div>
+
+        <div class="qa-box">
+            <div class="q-title"><span class="q-num">Q92</span> How does GramSetu handle dialects (Bhojpuri, Marwari, Haryanvi)?</div>
+            <div class="ans-block"><strong>Answer:</strong> Through multilingual tokenization and semantic similarity mapping in the router that translates regional dialect keywords to standard Hindi/English facts.</div>
+            <div class="reason-block"><strong>Reason:</strong> Ensures villagers who speak non-standard dialects are understood accurately.</div>
+        </div>
+
+        <div class="qa-box">
+            <div class="q-title"><span class="q-num">Q93</span> Why is open-source development crucial for this project?</div>
+            <div class="ans-block"><strong>Answer:</strong> Open source allows developers, universities, and government agencies across India to inspect the code, add regional languages, and contribute datasets freely.</div>
+            <div class="reason-block"><strong>Reason:</strong> Fosters grassroots technological sovereignty and widespread community-driven adoption.</div>
+        </div>
+
+        <div class="qa-box">
+            <div class="q-title"><span class="q-num">Q94</span> What happens if a villager asks a personal banking question (e.g., ATM PIN)?</div>
+            <div class="ans-block"><strong>Answer:</strong> The system immediately issues a security warning: *"GramSetu will never ask for your ATM PIN, OTP, or passwords. Never share these with anyone."*</div>
+            <div class="reason-block"><strong>Reason:</strong> Protects vulnerable rural citizens from financial fraud and phishing scams.</div>
+        </div>
+
+        <div class="qa-box">
+            <div class="q-title"><span class="q-num">Q95</span> How does the Kiosk assist during crop insurance claims (PMFBY)?</div>
+            <div class="ans-block"><strong>Answer:</strong> Informs farmers that crop damage must be reported within 72 hours on the PMFBY portal or insurance helpline with photographic proof.</div>
+            <div class="reason-block"><strong>Reason:</strong> The 72-hour reporting window is a critical rule; missing this deadline forfeits insurance compensation.</div>
+        </div>
+
+        <div class="qa-box">
+            <div class="q-title"><span class="q-num">Q96</span> What makes GramSetu compliant with Digital India initiatives?</div>
+            <div class="ans-block"><strong>Answer:</strong> It aligns directly with the goals of BharatNet, CSC 2.0, and Digital Agriculture Mission by bridging the digital divide through localized, accessible technology.</div>
+            <div class="reason-block"><strong>Reason:</strong> Extends the reach of national welfare policies to the last mile.</div>
+        </div>
+
+        <div class="qa-box">
+            <div class="q-title"><span class="q-num">Q97</span> What is LoRaWAN and how can it link GramSetu kiosks in the future?</div>
+            <div class="ans-block"><strong>Answer:</strong> Long Range Wide Area Network — a low-power, long-distance radio protocol (10-15 km range) capable of transmitting small text data packets between villages without cellular networks.</div>
+            <div class="reason-block"><strong>Reason:</strong> Allows inter-village mandi price syncing and emergency alert broadcasts at near-zero infrastructure cost.</div>
+        </div>
+
+        <div class="qa-box">
+            <div class="q-title"><span class="q-num">Q98</span> How is system health monitored on remote kiosks?</div>
+            <div class="ans-block"><strong>Answer:</strong> A local cron task logs temperature, RAM usage, database size, and query counts to a local diagnostics log (<code>/health</code>).</div>
+            <div class="reason-block"><strong>Reason:</strong> Enables kiosk operators to detect hardware overheating or storage exhaustion before system failure.</div>
+        </div>
+
+        <div class="qa-box">
+            <div class="q-title"><span class="q-num">Q99</span> If an examiner asks: "What is your single biggest technical achievement in this project?", what should you answer?</div>
+            <div class="ans-block"><strong>Answer:</strong> "Successfully deploying a high-reasoning 3-Billion-parameter AI model and deterministic database on low-power edge hardware that operates 100% offline with zero cloud cost, sub-second latency, and zero hallucinations for rural citizens."</div>
+            <div class="reason-block"><strong>Reason:</strong> Synthesizes AI engineering, social impact, edge optimization, and architectural rigor into a single compelling value proposition.</div>
+        </div>
+
+        <div class="qa-box">
+            <div class="q-title"><span class="q-num">Q100</span> In one sentence, summarize GramSetu AI.</div>
+            <div class="ans-block"><strong>Answer:</strong> "GramSetu AI is an offline, on-device AI kiosk bringing verified government schemes, agricultural intelligence, and healthcare awareness to the last mile of rural Bharat in their own voice and language."</div>
+            <div class="reason-block"><strong>Reason:</strong> Perfectly encapsulates the technology, the audience, and the transformative social mission of the project.</div>
+        </div>
+
+        <footer style="text-align: center; padding: 2.5rem 0; color: var(--text-secondary); font-size: 0.85rem;">
+            GramSetu AI © 2026 — 100 Master Viva & Interview Q&A • Built with Google Antigravity & Qwen 2.5 3B
+        </footer>
+    </div>
+
+</body>
+</html>

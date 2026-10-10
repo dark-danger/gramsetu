@@ -42,21 +42,6 @@ def init_db():
     );
     """)
 
-    # Knowledge Nodes Table (Persistent RAG / Custom Training Nodes)
-    cursor.execute("""
-    CREATE TABLE IF NOT EXISTS knowledge_nodes (
-        id TEXT PRIMARY KEY,
-        category TEXT NOT NULL,
-        title TEXT NOT NULL,
-        keywords_json TEXT NOT NULL,
-        summary TEXT,
-        response TEXT NOT NULL,
-        tags_json TEXT DEFAULT '[]',
-        created_at TEXT NOT NULL,
-        updated_at TEXT NOT NULL
-    );
-    """)
-
     conn.commit()
     conn.close()
 
@@ -137,61 +122,6 @@ def get_recent_messages(session_id="default", limit=10):
     conn.close()
     res = [dict(r) for r in reversed(rows)]
     return res
-
-def save_knowledge_node(node_id, category, title, keywords, summary, response, tags=None):
-    now = datetime.datetime.utcnow().isoformat()
-    kw_json = json.dumps(keywords if isinstance(keywords, list) else [k.strip() for k in str(keywords).split(",")])
-    tags_json = json.dumps(tags if isinstance(tags, list) else [])
-    conn = get_connection()
-    cursor = conn.cursor()
-    cursor.execute("""
-    INSERT INTO knowledge_nodes (id, category, title, keywords_json, summary, response, tags_json, created_at, updated_at)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-    ON CONFLICT(id) DO UPDATE SET
-        category = excluded.category,
-        title = excluded.title,
-        keywords_json = excluded.keywords_json,
-        summary = excluded.summary,
-        response = excluded.response,
-        tags_json = excluded.tags_json,
-        updated_at = excluded.updated_at;
-    """, (node_id, category, title, kw_json, summary, response, tags_json, now, now))
-    conn.commit()
-    conn.close()
-
-def get_all_knowledge_nodes():
-    conn = get_connection()
-    cursor = conn.cursor()
-    cursor.execute("SELECT * FROM knowledge_nodes ORDER BY category, title")
-    rows = cursor.fetchall()
-    conn.close()
-    result = []
-    for r in rows:
-        d = dict(r)
-        d["keywords"] = json.loads(d.get("keywords_json", "[]"))
-        d["tags"] = json.loads(d.get("tags_json", "[]"))
-        result.append(d)
-    return result
-
-def get_knowledge_node(node_id):
-    conn = get_connection()
-    cursor = conn.cursor()
-    cursor.execute("SELECT * FROM knowledge_nodes WHERE id = ?", (node_id,))
-    row = cursor.fetchone()
-    conn.close()
-    if row:
-        d = dict(row)
-        d["keywords"] = json.loads(d.get("keywords_json", "[]"))
-        d["tags"] = json.loads(d.get("tags_json", "[]"))
-        return d
-    return None
-
-def delete_knowledge_node(node_id):
-    conn = get_connection()
-    cursor = conn.cursor()
-    cursor.execute("DELETE FROM knowledge_nodes WHERE id = ?", (node_id,))
-    conn.commit()
-    conn.close()
 
 # Initialize on module load
 init_db()

@@ -1,0 +1,28 @@
+========================================================================
+🌾 GRAMSETU AI - PENDRIVE INSTALLATION & RUN GUIDE
+========================================================================
+
+📁 PENDRIVE में डालने के लिए निर्देश:
+1. इस पूरे 'GramSetu_Pendrive_Package' फोल्डर को अपनी Pendrive में Copy / Paste कर लें।
+2. जब भी आप किसी Windows PC पर Pendrive लगाएंगे:
+   
+   👉 तरीका 1 (सबसे आसान - 1 Click Setup):
+      - "1_CLICK_INSTALL_WINDOWS.bat" पर Double-Click करें।
+      - यह सिस्टम पर जांच करेगा, अपने आप .exe तैयार करेगा और App चालू कर देगा।
+
+   👉 तरीका 2 (Direct Run / Launcher):
+      - "Run_GramSetu_Windows.bat" पर Double-Click करें।
+
+   👉 तरीका 3 (Silent Mode / No Black Window):
+      - "GramSetu_Silent.vbs" पर Double-Click करें।
+
+   👉 तरीका 4 (Mac / Apple Laptop पर चलाने के लिए):
+      - "Start_GramSetu_Mac.command" पर Double-Click करें।
+
+------------------------------------------------------------------------
+✨ Features & Offline Support:
+- 100% Offline AI Support & Agricultural Advisory
+- Voice & Audio Output (Hindi & English)
+- Mandi Rates, Weather, Crop Diagnostics, Government Schemes
+- SQLite Database & Dynamic RAG Engine
+========================================================================

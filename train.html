@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GramSetu AI - Model Knowledge Trainer & Ingestion Studio</title>
+  <link rel="icon" type="image/png" href="icon-192.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #121417;
+      --bg-card: #1c2026;
+      --bg-card-hover: #242a33;
+      --border-color: #2e3642;
+      --primary: #10a37f;
+      --primary-hover: #0d8466;
+      --accent: #3b82f6;
+      --text-main: #f3f4f6;
+      --text-sub: #9ca3af;
+      --text-muted: #6b7280;
+      --gold: #f59e0b;
+      --danger: #ef4444;
+      --radius: 12px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg-dark);
+      color: var(--text-main);
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      background: rgba(28, 32, 38, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border-color);
+      padding: 16px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .brand-logo {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, #10a37f, #3b82f6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
+    .brand-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+    .brand-sub {
+      font-size: 0.8rem;
+      color: var(--text-sub);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 12px;
+    }
+    .btn {
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: all 0.2s ease;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .btn-primary { background: var(--primary); color: #fff; }
+    .btn-primary:hover { background: var(--primary-hover); }
+    .btn-secondary { background: var(--bg-card); border-color: var(--border-color); color: var(--text-main); }
+    .btn-secondary:hover { background: var(--bg-card-hover); border-color: var(--text-sub); }
+
+    main {
+      flex: 1;
+      max-width: 1280px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 24px;
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 24px;
+    }
+
+    @media (max-width: 900px) {
+      main { grid-template-columns: 1fr; }
+    }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .card-title {
+      font-size: 1.15rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    label {
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--text-sub);
+    }
+
+    input, select, textarea {
+      width: 100%;
+      background: #14171c;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 10px 14px;
+      color: var(--text-main);
+      font-family: inherit;
+      font-size: 0.9rem;
+      outline: none;
+      transition: border-color 0.2s ease;
+    }
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--primary);
+    }
+    textarea {
+      min-height: 120px;
+      resize: vertical;
+      line-height: 1.5;
+    }
+
+    .dropzone {
+      border: 2px dashed var(--border-color);
+      border-radius: var(--radius);
+      padding: 24px;
+      text-align: center;
+      cursor: pointer;
+      background: rgba(20, 23, 28, 0.5);
+      transition: all 0.2s ease;
+    }
+    .dropzone:hover, .dropzone.dragover {
+      border-color: var(--primary);
+      background: rgba(16, 163, 127, 0.08);
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+    .badge-agri { background: rgba(16, 185, 129, 0.2); color: #34d399; }
+    .badge-tech { background: rgba(59, 130, 246, 0.2); color: #60a5fa; }
+    .badge-medical { background: rgba(239, 68, 68, 0.2); color: #f87171; }
+    .badge-general { background: rgba(168, 85, 247, 0.2); color: #c084fc; }
+
+    .node-list {
+      max-height: 400px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding-right: 4px;
+    }
+    .node-item {
+      background: #14171c;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      cursor: pointer;
+      transition: border-color 0.2s;
+    }
+    .node-item:hover {
+      border-color: var(--primary);
+    }
+    .node-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .node-title {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #fff;
+    }
+    .node-preview {
+      font-size: 0.8rem;
+      color: var(--text-sub);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .alert {
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-size: 0.875rem;
+      display: none;
+    }
+    .alert-success { background: rgba(16, 163, 127, 0.15); border: 1px solid var(--primary); color: #34d399; }
+    .alert-error { background: rgba(239, 68, 68, 0.15); border: 1px solid var(--danger); color: #f87171; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="brand">
+      <div class="brand-logo">🌾</div>
+      <div>
+        <div class="brand-title">GramSetu AI Studio</div>
+        <div class="brand-sub">Model Knowledge Ingestion & 3-Way RAG Trainer</div>
+      </div>
+    </div>
+    <div class="nav-links">
+      <a href="index.html" class="btn btn-secondary">💬 Open Chat</a>
+      <a href="docs.html" class="btn btn-secondary">📖 Docs</a>
+    </div>
+  </header>
+
+  <main>
+    <!-- Left Column: Training Input -->
+    <div class="card">
+      <div class="card-title">🧠 Train New Knowledge Node</div>
+      
+      <div id="statusAlert" class="alert"></div>
+
+      <div class="form-group">
+        <label for="categorySelect">Domain / Category</label>
+        <select id="categorySelect">
+          <option value="agriculture">🌾 Agriculture & Crops (कृषि व फसल)</option>
+          <option value="tech">⚙️ Tech, Hardware & IoT (सेंसर, रोबोटिक्स)</option>
+          <option value="coding">💻 Programming & Code (पायथन, JS, C++)</option>
+          <option value="biology">🧬 Biology & Life Sciences (बायोलॉजी)</option>
+          <option value="pharmacy">💊 Pharmaceutical & Drugs (फार्मास्युटिकल)</option>
+          <option value="medical">🩺 Medical & First Aid (चिकित्सा व प्राथमिक उपचार)</option>
+          <option value="general">🌐 General / Rural Schemes (सरकारी योजनाएं व अन्य)</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="titleInput">Topic / Question (हिंदी या English)</label>
+        <input type="text" id="titleInput" placeholder="उदा: सरसों की खेती में खाद और सिंचाई प्रबंधन">
+      </div>
+
+      <div class="form-group">
+        <label for="keywordsInput">Keywords (कॉमा से अलग करें - खाली छोड़ने पर ऑटो-जेनरेट होगा)</label>
+        <input type="text" id="keywordsInput" placeholder="sarson, mustard, irrigation, fertilizer, sardi ki kheti">
+      </div>
+
+      <div class="form-group">
+        <label for="responseInput">Verified Solution / Guide (विस्तृत वैज्ञानिक या तकनीकी उत्तर)</label>
+        <textarea id="responseInput" rows="6" placeholder="चरणबद्ध तरीके से बीज दर, खाद, सिंचाई और रोग नियंत्रण के सटीक आंकड़े दर्ज करें..."></textarea>
+      </div>
+
+      <div style="display: flex; gap: 12px;">
+        <button id="btnTrainSingle" class="btn btn-primary" style="flex: 1;">⚡ Train & Sync Knowledge</button>
+        <button id="btnClearForm" class="btn btn-secondary">Clear</button>
+      </div>
+
+      <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 8px 0;">
+
+      <div class="card-title" style="font-size: 1rem;">📁 Bulk Dataset Ingestion (JSON / JSONL / TXT / MD)</div>
+      <div id="dropzone" class="dropzone">
+        <div style="font-size: 24px; margin-bottom: 6px;">📥</div>
+        <div style="font-size: 0.9rem; font-weight: 500;">Click to upload or drag & drop files</div>
+        <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">Supports Q&A datasets, raw notes, or Markdown summaries</div>
+        <input type="file" id="fileInput" accept=".json,.jsonl,.txt,.md" style="display: none;">
+      </div>
+    </div>
+
+    <!-- Right Column: Verification Sandbox & Index -->
+    <div style="display: flex; flex-direction: column; gap: 24px;">
+      
+      <!-- Verification Sandbox -->
+      <div class="card">
+        <div class="card-title">🎯 Instant Verification Sandbox</div>
+        <div class="form-group">
+          <label for="testQueryInput">Test Query (हिंदी / Hinglish / English)</label>
+          <div style="display: flex; gap: 8px;">
+            <input type="text" id="testQueryInput" placeholder="उदा: gehu me peela ratua">
+            <button id="btnTestQuery" class="btn btn-primary">Test</button>
+          </div>
+        </div>
+
+        <div id="testResultBox" style="background: #14171c; border: 1px solid var(--border-color); border-radius: 8px; padding: 14px; min-height: 100px; font-size: 0.85rem; white-space: pre-wrap; color: var(--text-sub);">
+Type a query above to test instant RAG retrieval accuracy.
+        </div>
+      </div>
+
+      <!-- Indexed Knowledge Nodes -->
+      <div class="card" style="flex: 1;">
+        <div class="card-title" style="justify-content: space-between;">
+          <span>📚 Indexed Knowledge Nodes (<span id="nodeCount">0</span>)</span>
+          <button id="btnRefreshList" class="btn btn-secondary" style="padding: 4px 10px; font-size: 0.75rem;">🔄 Refresh</button>
+        </div>
+        
+        <input type="text" id="filterNodesInput" placeholder="Filter indexed topics..." style="padding: 8px 12px; font-size: 0.85rem;">
+
+        <div id="nodesContainer" class="node-list">
+          <div style="color: var(--text-muted); font-size: 0.85rem; text-align: center; padding: 20px;">Loading indexed nodes...</div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <script>
+    let allNodes = [];
+
+    async function loadKnowledgeNodes() {
+      try {
+        const resp = await fetch('/api/knowledge/list');
+        const data = await resp.json();
+        if (data && data.nodes) {
+          allNodes = data.nodes;
+          renderNodes(allNodes);
+        }
+      } catch (e) {
+        console.error("Failed to load knowledge list:", e);
+        if (window.COMPREHENSIVE_KNOWLEDGE_BASE) {
+          allNodes = window.COMPREHENSIVE_KNOWLEDGE_BASE;
+          renderNodes(allNodes);
+        }
+      }
+    }
+
+    function renderNodes(nodes) {
+      const container = document.getElementById('nodesContainer');
+      document.getElementById('nodeCount').innerText = nodes.length;
+      
+      if (!nodes.length) {
+        container.innerHTML = `<div style="color: var(--text-muted); text-align: center; padding: 20px;">No nodes found</div>`;
+        return;
+      }
+
+      container.innerHTML = nodes.map(n => {
+        const catClass = `badge-${n.category || 'general'}`;
+        return `
+          <div class="node-item" onclick="fillFormFromNode('${n.id}')">
+            <div class="node-header">
+              <span class="node-title">${n.title}</span>
+              <span class="badge ${catClass}">${n.category || 'general'}</span>
+            </div>
+            <div class="node-preview">${n.summary || (n.response || '').substring(0, 80)}...</div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function fillFormFromNode(nodeId) {
+      const item = allNodes.find(x => x.id === nodeId);
+      if (!item) return;
+      document.getElementById('categorySelect').value = item.category || 'agriculture';
+      document.getElementById('titleInput').value = item.title || '';
+      document.getElementById('keywordsInput').value = Array.isArray(item.keywords) ? item.keywords.join(', ') : (item.keywords || '');
+      document.getElementById('responseInput').value = item.response || '';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function showAlert(msg, isSuccess = true) {
+      const el = document.getElementById('statusAlert');
+      el.className = isSuccess ? 'alert alert-success' : 'alert alert-error';
+      el.innerText = msg;
+      el.style.display = 'block';
+      setTimeout(() => { el.style.display = 'none'; }, 6000);
+    }
+
+    // Submit single knowledge node
+    document.getElementById('btnTrainSingle').addEventListener('click', async () => {
+      const category = document.getElementById('categorySelect').value;
+      const title = document.getElementById('titleInput').value.trim();
+      const keywordsStr = document.getElementById('keywordsInput').value.trim();
+      const response = document.getElementById('responseInput').value.trim();
+
+      if (!title || !response) {
+        showAlert('Please enter both Title/Topic and Detailed Solution', false);
+        return;
+      }
+
+      const keywords = keywordsStr ? keywordsStr.split(',').map(k => k.trim()).filter(Boolean) : [];
+
+      const payload = {
+        category,
+        title,
+        keywords,
+        response
+      };
+
+      try {
+        const res = await fetch('/api/train', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        if (data.status === 'success') {
+          showAlert(`✅ Knowledge Trained Successfully! (Total Nodes: ${data.total_knowledge_nodes})`, true);
+          loadKnowledgeNodes();
+        } else {
+          showAlert(`❌ Ingestion Error: ${data.error || 'Unknown'}`, false);
+        }
+      } catch (err) {
+        showAlert(`❌ Server Error: ${err.message}`, false);
+      }
+    });
+
+    document.getElementById('btnClearForm').addEventListener('click', () => {
+      document.getElementById('titleInput').value = '';
+      document.getElementById('keywordsInput').value = '';
+      document.getElementById('responseInput').value = '';
+    });
+
+    // Bulk File Ingestion
+    const dropzone = document.getElementById('dropzone');
+    const fileInput = document.getElementById('fileInput');
+
+    dropzone.addEventListener('click', () => fileInput.click());
+    dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.classList.add('dragover'); });
+    dropzone.addEventListener('dragleave', () => dropzone.classList.remove('dragover'));
+    dropzone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropzone.classList.remove('dragover');
+      if (e.dataTransfer.files.length) handleFileUpload(e.dataTransfer.files[0]);
+    });
+    fileInput.addEventListener('change', (e) => {
+      if (e.target.files.length) handleFileUpload(e.target.files[0]);
+    });
+
+    async function handleFileUpload(file) {
+      const text = await file.text();
+      let payload = null;
+
+      try {
+        if (file.name.endsWith('.json')) {
+          payload = { items: JSON.parse(text) };
+        } else if (file.name.endsWith('.jsonl')) {
+          const lines = text.split('\n').filter(l => l.trim()).map(l => JSON.parse(l));
+          payload = { items: lines };
+        } else {
+          // Send plain text to backend
+          const category = document.getElementById('categorySelect').value;
+          const lines = text.split('\n');
+          payload = {
+            title: file.name.replace(/\.[^/.]+$/, ""),
+            response: text,
+            category: category
+          };
+        }
+
+        const res = await fetch('/api/train', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        if (data.status === 'success') {
+          showAlert(`✅ Bulk Ingestion Complete! Added: ${data.added}, Updated: ${data.updated}, Total: ${data.total_knowledge_nodes}`, true);
+          loadKnowledgeNodes();
+        } else {
+          showAlert(`❌ Bulk error: ${data.error}`, false);
+        }
+      } catch (err) {
+        showAlert(`❌ Failed to parse or upload file: ${err.message}`, false);
+      }
+    }
+
+    // Test Query Sandbox
+    document.getElementById('btnTestQuery').addEventListener('click', () => {
+      const q = document.getElementById('testQueryInput').value.trim().toLowerCase();
+      if (!q) return;
+
+      const words = q.split(/\s+/).filter(w => w.length > 2);
+      let bestItem = null;
+      let bestScore = 0;
+
+      for (const item of allNodes) {
+        let score = 0;
+        const titleLower = (item.title || '').toLowerCase();
+        if (titleLower.includes(q)) score += 80;
+
+        const kws = Array.isArray(item.keywords) ? item.keywords : [];
+        for (const kw of kws) {
+          const kwl = kw.toLowerCase();
+          if (q.includes(kwl)) score += 50;
+        }
+
+        if (score > bestScore) {
+          bestScore = score;
+          bestItem = item;
+        }
+      }
+
+      const box = document.getElementById('testResultBox');
+      if (bestItem && bestScore >= 30) {
+        box.innerHTML = `<strong>🎯 Match Score: ${bestScore} pts (Category: ${bestItem.category})</strong>\n\n📌 <strong>Title:</strong> ${bestItem.title}\n🔑 <strong>Keywords:</strong> ${(bestItem.keywords || []).join(', ')}\n\n📄 <strong>Verified Response:</strong>\n${bestItem.response}`;
+        box.style.borderColor = 'var(--primary)';
+      } else {
+        box.innerHTML = `<span style="color: var(--danger);">❌ No verified RAG match found (Score: ${bestScore}). You can train this query using the form on the left!</span>`;
+        box.style.borderColor = 'var(--danger)';
+      }
+    });
+
+    // Filter list
+    document.getElementById('filterNodesInput').addEventListener('input', (e) => {
+      const q = e.target.value.toLowerCase();
+      const filtered = allNodes.filter(n => 
+        (n.title || '').toLowerCase().includes(q) || 
+        (n.category || '').toLowerCase().includes(q) ||
+        (n.keywords || []).some(k => k.toLowerCase().includes(q))
+      );
+      renderNodes(filtered);
+    });
+
+    document.getElementById('btnRefreshList').addEventListener('click', loadKnowledgeNodes);
+
+    // Initial Load
+    loadKnowledgeNodes();
+  </script>
+</body>
+</html>
