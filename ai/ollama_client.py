@@ -7,22 +7,24 @@ import urllib.error
 import json
 from core.config import OLLAMA_URL, OLLAMA_MODEL
 
-def stream_chat_from_ollama(messages: list, model: str = None):
+def stream_chat_from_ollama(messages: list, model: str = None, max_tokens: int = None):
     """
     Generator yielding response token strings from local Ollama /api/chat.
     """
     target_model = model or OLLAMA_MODEL
     url = f"{OLLAMA_URL}/api/chat"
     
+    predict_tokens = max_tokens if max_tokens else 320
+
     payload = {
         "model": target_model,
         "messages": messages,
         "stream": True,
         "options": {
-            "temperature": 0.35,
-            "top_p": 0.90,
+            "temperature": 0.25,
+            "top_p": 0.85,
             "repeat_penalty": 1.15,
-            "num_predict": 750,
+            "num_predict": predict_tokens,
             "stop": [
                 "<|im_end|>", "<|im_start|>",
                 "User:", "\nUser:", "Human:", "\nHuman:",

@@ -222,7 +222,10 @@ class GramSetuServer(http.server.SimpleHTTPRequestHandler):
                 recent_history = client_history if client_history else get_recent_messages(session_id, limit=6)
                 messages = build_messages_for_ollama(routing_info, recent_history)
 
-                for token in stream_chat_from_ollama(messages, model=requested_model):
+                wants_exp = bool(re.search(r'\b(explain|detail|vistar|samjhao|samjha|pura batao|step by step detail|describe|elaborate|deep|kyu|kyon|why)\b', prompt.lower()))
+                max_toks = 750 if wants_exp else 280
+
+                for token in stream_chat_from_ollama(messages, model=requested_model, max_tokens=max_toks):
                     final_accumulated_text += token
                     chunk_payload = json.dumps({"type": "token", "token": token}) + "\n"
                     self.write_stream(chunk_payload)
