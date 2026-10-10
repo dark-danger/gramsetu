@@ -33,7 +33,7 @@ def transliterate_to_gurmukhi(name: str) -> str:
     lower = name.lower().strip()
     return PUNJABI_NAME_MAP.get(lower, name)
 
-def route_and_prepare(prompt: str, session_id: str = "default") -> dict:
+def route_and_prepare(prompt: str, session_id: str = "default", recent_messages: list = None) -> dict:
     """
     Executes the deterministic preprocessing pipeline.
     Returns payload with metadata, tool results, memory context, and routing decision.
@@ -53,8 +53,11 @@ def route_and_prepare(prompt: str, session_id: str = "default") -> dict:
     # 4. Deterministic Memory Extraction
     extracted_memories = extract_and_store_memories(clean_prompt)
 
-    # 5. Multi-Turn Context & Pronoun Resolution
-    resolved_prompt = resolve_context_references(clean_prompt, session_id=session_id)
+    # 5. Multi-Turn Context & Elliptical Topic Resolution
+    context_info = resolve_context_references(clean_prompt, session_id=session_id, recent_messages=recent_messages)
+    resolved_prompt = context_info.get("resolved_prompt", clean_prompt)
+    if context_info.get("inherited_intent") and intent in ["general_discussion", "simple_transformation"]:
+        intent = context_info["inherited_intent"]
 
     # 6. Retrieve Relevant Memories
     relevant_memories = get_relevant_memories_for_prompt(resolved_prompt)
@@ -72,6 +75,7 @@ def route_and_prepare(prompt: str, session_id: str = "default") -> dict:
         "tone": tone_info["tone"],
         "style_prompt": tone_info["style_prompt"],
         "intent": intent,
+        "context_info": context_info,
         "extracted_memories": extracted_memories,
         "relevant_memories": relevant_memories,
         "lora_adapter": lora_analysis,

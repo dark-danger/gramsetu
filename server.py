@@ -169,17 +169,18 @@ class GramSetuServer(http.server.SimpleHTTPRequestHandler):
 
             session_id = req_data.get("session_id", "default")
             requested_model = req_data.get("model", OLLAMA_MODEL)
+            client_history = req_data.get("history") or []
 
             if not prompt.strip():
                 self.send_response(400)
                 self.end_headers()
                 return
 
+            # 1. Deterministic Router & Preprocessing Pipeline (passing active multi-turn history)
+            routing_info = route_and_prepare(prompt, session_id=session_id, recent_messages=client_history)
+
             # Save user message to database
             save_message(session_id, "user", prompt)
-
-            # 1. Deterministic Router & Preprocessing Pipeline
-            routing_info = route_and_prepare(prompt, session_id=session_id)
 
             # Prepare Safe Processing Metadata for Deep Think Panel
             metadata = {
@@ -217,7 +218,8 @@ class GramSetuServer(http.server.SimpleHTTPRequestHandler):
 
             # CASE B: Execute Qwen via Ollama with Compact Structured Context
             else:
-                recent_history = get_recent_messages(session_id, limit=6)
+                # Use client history if available, else retrieve from SQLite
+                recent_history = client_history if client_history else get_recent_messages(session_id, limit=6)
                 messages = build_messages_for_ollama(routing_info, recent_history)
 
                 for token in stream_chat_from_ollama(messages, model=requested_model):

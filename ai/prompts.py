@@ -37,14 +37,15 @@ def build_messages_for_ollama(routing_info: dict, recent_history: list) -> list:
             "• Provide high-clarity, step-by-step guidance with clear sections, dosages, and parameters."
         )
 
-    # ==================== 2. MULTI-PARAMETER REASONING DIRECTIVE ====================
+    # ==================== 2. MULTI-PARAMETER & CONTINUITY REASONING DIRECTIVE ====================
     reasoning_rule = (
-        "MULTI-PARAMETER SITUATIONAL REASONING RULES:\n"
-        "1. PARAMETER ADAPTATION: Actively adapt your solution to user parameters (e.g., land size in bigha/acre, soil type like sandy/clay/loamy, season like Rabi/Kharif, budget, crop growth stage).\n"
-        "2. PRACTICAL STRUCTURE: Format your answer with clear headers, bullet points (•), bold key numbers/doses, and emoji indicators (🌾, 🧪, 💧, ⚠️).\n"
-        "3. EXACT MEASUREMENTS: Always specify exact dosage per acre or per liter of water (e.g. '200ml in 200L water per acre').\n"
-        "4. ROOT-CAUSE & PREVENTIVE TIPS: Along with the cure, mention how to prevent the problem in future.\n"
-        "5. RESPECTFUL & ENGAGING: Speak directly to the user's situation without unnecessary robotic filler."
+        "MULTI-PARAMETER & CONVERSATIONAL CONTINUITY RULES:\n"
+        "1. CONVERSATION THREAD RETENTION: This is an active continuous dialogue. The user's newest message is a direct follow-up to the ongoing topic. Always connect their new parameter/crop/question to what was being discussed previously (e.g. if previous turn was tractor harvesting implements, and user says 'sweet corn katni h', tell them the specific tractor sweet corn forage harvester, corn header attachments, or sickle cutter for harvesting sweet corn!).\n"
+        "2. NO TOPIC RESET: Never disconnect from the previous turns or give a generic beginner guide when the user provides a follow-up detail.\n"
+        "3. PARAMETER ADAPTATION: Actively adapt your solution to user parameters (e.g., land size in bigha/acre, soil type like sandy/clay/loamy, season like Rabi/Kharif, budget, crop growth stage).\n"
+        "4. PRACTICAL STRUCTURE: Format your answer with clear headers, bullet points (•), bold key numbers/doses, and emoji indicators (🌾, ⚙️, 🧪, 💧, ⚠️).\n"
+        "5. EXACT MEASUREMENTS: Always specify exact tractor HP, implement names, and chemical dosages per acre.\n"
+        "6. RESPECTFUL & ENGAGING: Speak directly to the user's situation with human empathy and zero robotic filler."
     )
 
     # ==================== 3. DOMAIN-SPECIFIC GROUNDING ====================

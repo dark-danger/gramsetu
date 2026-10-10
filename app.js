@@ -261,7 +261,8 @@ async function handleSend() {
       body: JSON.stringify({
         prompt: prompt,
         session_id: APP_STATE.sessionId,
-        model: APP_STATE.activeModel
+        model: APP_STATE.activeModel,
+        history: APP_STATE.conversationHistory.slice(0, -1) // Previous turns before current prompt
       })
     });
 
