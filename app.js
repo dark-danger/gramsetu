@@ -977,3 +977,12 @@ function escapeHTML(str) {
     '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
   }[tag] || tag));
 }
+
+// Register Offline Service Worker for Mobile PWA
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js')
+      .then(reg => console.log('🌾 GramSetu Mobile Offline ServiceWorker registered:', reg.scope))
+      .catch(err => console.log('ServiceWorker registration note:', err));
+  });
+}
