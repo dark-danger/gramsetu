@@ -66,7 +66,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text('🧪 गेहूं हेतु खाद की मात्रा ($_acres एकड़ के लिए):', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Color(0xFF4ADE80))),
+                  Text('🧪 गेहूं हेतु खाद की मात्रा ($_acres एकड़ के लिए):', style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Color(0xFF4ADE80))),
                   const SizedBox(height: 10),
                   Text('• DAP (18:46:0): ${(_acres * 1.0).toStringAsFixed(1)} बैग (50 किग्रा)', style: const TextStyle(color: Colors.white, fontSize: 13)),
                   const SizedBox(height: 6),
