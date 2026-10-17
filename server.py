@@ -18,7 +18,7 @@ import urllib.request
 import urllib.error
 
 # Core imports
-from core.config import PORT, BASE_DIR, OLLAMA_URL, OLLAMA_MODEL, DB_PATH
+from core.config import PORT, BASE_DIR, OLLAMA_URL, OLLAMA_MODEL, DB_PATH, GEMINI_API_KEY, GEMINI_MODEL
 from core.database import (
     get_all_memories, set_memory, clear_all_memories, delete_memory,
     save_message, get_recent_messages
@@ -27,6 +27,7 @@ from core.router import route_and_prepare
 from core.validation import validate_and_sanitize
 from ai.prompts import build_messages_for_ollama
 from ai.ollama_client import stream_chat_from_ollama
+from ai.gemini_client import is_gemini_available, stream_chat_from_gemini
 from ai.offline_fallback import generate_offline_response
 
 class GramSetuServer(http.server.SimpleHTTPRequestHandler):
@@ -101,20 +102,24 @@ class GramSetuServer(http.server.SimpleHTTPRequestHandler):
         super().do_POST()
 
     def proxy_ollama_tags(self):
+        models = []
+        if is_gemini_available():
+            models.append({"name": GEMINI_MODEL, "details": {"family": "Google Gemini", "parameter_size": "Cloud AI"}})
+        models.append({"name": OLLAMA_MODEL, "details": {"family": "Qwen", "parameter_size": "Local 3B"}})
         try:
             req = urllib.request.Request(f"{OLLAMA_URL}/api/tags")
-            with urllib.request.urlopen(req, timeout=5) as resp:
-                data = resp.read()
-                self.send_response(200)
-                self.send_header('Content-Type', 'application/json')
-                self.end_headers()
-                self.wfile.write(data)
+            with urllib.request.urlopen(req, timeout=2) as resp:
+                data = json.loads(resp.read().decode('utf-8'))
+                for m in data.get("models", []):
+                    if m.get("name") not in [GEMINI_MODEL, OLLAMA_MODEL]:
+                        models.append(m)
         except Exception:
-            self.send_response(200)
-            self.send_header('Content-Type', 'application/json')
-            self.end_headers()
-            fallback = json.dumps({"models": [{"name": OLLAMA_MODEL}]}).encode('utf-8')
-            self.wfile.write(fallback)
+            pass
+
+        self.send_response(200)
+        self.send_header('Content-Type', 'application/json')
+        self.end_headers()
+        self.wfile.write(json.dumps({"models": models}).encode('utf-8'))
 
     def handle_get_memories(self):
         mems = get_all_memories()
@@ -153,7 +158,7 @@ class GramSetuServer(http.server.SimpleHTTPRequestHandler):
     def handle_agent_chat(self):
         """
         Master Agent Pipeline:
-        Input -> Language/Intent/Tone -> Memory & Tool Execution -> Qwen Inference -> Validation -> Stream.
+        Input -> Language/Intent/Tone -> Memory & Tool Execution -> Gemini/Qwen Inference -> Validation -> Stream.
         """
         content_length = int(self.headers.get('Content-Length', 0))
         body = self.rfile.read(content_length) if content_length > 0 else b'{}'
@@ -170,7 +175,7 @@ class GramSetuServer(http.server.SimpleHTTPRequestHandler):
                 prompt = last_msg.get("content", "")
 
             session_id = req_data.get("session_id", "default")
-            requested_model = req_data.get("model", OLLAMA_MODEL)
+            requested_model = req_data.get("model", GEMINI_MODEL if is_gemini_available() else OLLAMA_MODEL)
             client_history = req_data.get("history") or []
 
             if not prompt.strip():
@@ -185,11 +190,12 @@ class GramSetuServer(http.server.SimpleHTTPRequestHandler):
             save_message(session_id, "user", prompt)
 
             # Prepare Safe Processing Metadata for Deep Think Panel
+            active_engine_name = "Google Gemini 3.8 Flash (Cloud Intelligence)" if is_gemini_available() else "Local Neural Engine"
             thinking_steps = [
                 f"Intent & Tone Analysis: Identified '{routing_info['intent']}' with {routing_info['tone']} tone in {routing_info['input_language']}.",
                 f"Context & Parameters: Cross-referenced user profile memories ({len(routing_info['relevant_memories'])} active) and domain constraints.",
                 f"Ground Truth Retrieval: " + (f"Retrieved verified domain knowledge from '{routing_info['rag_item']['title']}'." if routing_info.get("rag_item") else "Consulted multidisciplinary verified scientific & technical knowledge matrix."),
-                "Cognitive Synthesis: Formulating comprehensive, step-by-step reasoned recommendations with practical specifications."
+                f"Cognitive Synthesis: Engaging {active_engine_name} for deep reasoning and step-by-step resolution."
             ]
 
             metadata = {
@@ -201,7 +207,9 @@ class GramSetuServer(http.server.SimpleHTTPRequestHandler):
                 "tools_executed": [t["tool_name"] for t in routing_info["tool_results"]],
                 "rag_title": routing_info["rag_item"]["title"] if routing_info.get("rag_item") else None,
                 "image_payload": routing_info.get("image_payload"),
-                "thinking_steps": thinking_steps
+                "thinking_steps": thinking_steps,
+                "engine": active_engine_name,
+                "model": GEMINI_MODEL if is_gemini_available() else OLLAMA_MODEL
             }
 
             # Start Streaming Response Chunked / NDJSON
@@ -226,28 +234,47 @@ class GramSetuServer(http.server.SimpleHTTPRequestHandler):
                 chunk_payload = json.dumps({"type": "token", "token": direct_ans}) + "\n"
                 self.write_stream(chunk_payload)
 
-            # CASE B: Execute Qwen via Ollama with Compact Structured Context
+            # CASE B: Execute Neural Intelligence (Gemini Cloud API -> Local Ollama -> Offline Cognitive Synthesizer)
             else:
-                # Use client history if available, else retrieve from SQLite
                 recent_history = client_history if client_history else get_recent_messages(session_id, limit=8)
                 messages = build_messages_for_ollama(routing_info, recent_history)
+                system_prompt = messages[0]["content"] if messages and messages[0].get("role") == "system" else ""
 
-                # Generous token budget for complete, step-by-step reasoning
-                max_toks = 1500
+                stream_success = False
 
-                stream_failed = False
-                for token in stream_chat_from_ollama(messages, model=requested_model, max_tokens=max_toks):
-                    if "[Ollama local bridge error:" in token:
-                        stream_failed = True
-                        break
-                    final_accumulated_text += token
-                    chunk_payload = json.dumps({"type": "token", "token": token}) + "\n"
-                    self.write_stream(chunk_payload)
+                # 1. Primary Engine: Google Gemini 3.8 Flash (World-Class Deep Reasoning)
+                if is_gemini_available() and requested_model not in ["offline", "qwen2.5:3b_local"]:
+                    try:
+                        for token in stream_chat_from_gemini(system_prompt, recent_history, prompt, model=GEMINI_MODEL):
+                            if "[Gemini bridge error:" in token:
+                                stream_success = False
+                                break
+                            stream_success = True
+                            final_accumulated_text += token
+                            chunk_payload = json.dumps({"type": "token", "token": token}) + "\n"
+                            self.write_stream(chunk_payload)
+                    except Exception:
+                        stream_success = False
 
-                if stream_failed:
+                # 2. Secondary Engine: Local Ollama (Qwen)
+                if not stream_success and requested_model != "offline":
+                    try:
+                        max_toks = 1500
+                        for token in stream_chat_from_ollama(messages, model=requested_model if requested_model != GEMINI_MODEL else OLLAMA_MODEL, max_tokens=max_toks):
+                            if "[Ollama local bridge error:" in token:
+                                stream_success = False
+                                break
+                            stream_success = True
+                            final_accumulated_text += token
+                            chunk_payload = json.dumps({"type": "token", "token": token}) + "\n"
+                            self.write_stream(chunk_payload)
+                    except Exception:
+                        stream_success = False
+
+                # 3. Tertiary Engine: 100% Offline Multi-Domain Cognitive Synthesizer
+                if not stream_success:
                     fallback_text = routing_info.get("direct_response") or generate_offline_response(routing_info, prompt)
                     final_accumulated_text = fallback_text
-                    # Stream tokens smoothly for natural UX
                     words = re.split(r'(\s+|\n+)', fallback_text)
                     for w in words:
                         if w:

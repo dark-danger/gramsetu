@@ -59,6 +59,9 @@
           <div class="history-entry" onclick="openMemoryModal()">
             <span class="entry-title">🧠 View & Edit AI Memory</span>
           </div>
+          <div class="history-entry" onclick="window.location.href='train.html'">
+            <span class="entry-title">⚡ Train AI / Ingest Knowledge</span>
+          </div>
         </div>
       </div>
 
@@ -68,7 +71,7 @@
           <div class="user-avatar-badge">G</div>
           <div class="user-profile-info">
             <div class="user-name">GRAM Setu AI</div>
-            <div class="user-plan" id="sidebarEngineStatus">Qwen 2.5 • Reasoning Active</div>
+            <div class="user-plan" id="sidebarEngineStatus">Gemini 3.8 Flash • Active</div>
           </div>
           <div class="engine-live-dot" title="AI Memory & Engine Active"></div>
         </div>
@@ -89,14 +92,18 @@
           <!-- Model Dropdown -->
           <div class="model-pill-wrapper">
             <button class="model-pill-btn" onclick="toggleModelMenu()">
-              <span class="model-title" id="activeModelLabel">GRAM Setu (Qwen 2.5 3B)</span>
-              <span class="model-badge">3B</span>
+              <span class="model-title" id="activeModelLabel">GRAM Setu (Gemini 3.8 Flash)</span>
+              <span class="model-badge">AI</span>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
             </button>
 
             <!-- Dropdown Menu -->
             <div class="model-menu" id="modelMenu">
-              <div class="model-option active" onclick="setModel('ollama')">
+              <div class="model-option active" onclick="setModel('gemini-3.8-flash')">
+                <div class="opt-title">Google Gemini 3.8 Flash (Active API)</div>
+                <div class="opt-sub">Deep reasoning & world-class neural intelligence</div>
+              </div>
+              <div class="model-option" onclick="setModel('qwen2.5:3b')">
                 <div class="opt-title">GRAM Setu - Local Qwen 2.5 (3B)</div>
                 <div class="opt-sub">Real-time local LLM stream via localhost:11434</div>
               </div>

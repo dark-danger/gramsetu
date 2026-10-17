@@ -3,8 +3,8 @@
 // Local SQLite Memory Sync, Local Voice STT/TTS, and Multimodal Visual Studio.
 
 const APP_STATE = {
-  activeModel: 'qwen2.5:3b',
-  engineMode: 'ollama', // 'ollama' or 'offline'
+  activeModel: 'gemini-3.8-flash',
+  engineMode: 'gemini', // 'gemini', 'ollama', or 'offline'
   deepReasoningEnabled: true,
   isListening: false,
   speechRate: 0.95,
@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
   updateReasoningToggleUI();
 });
 
-// Fetch active model list from Ollama
+// Fetch active model list from Backend (Gemini / Ollama)
 async function initOllamaProbe() {
   const modelLabel = document.getElementById('activeModelLabel');
   const sidebarStatus = document.getElementById('sidebarEngineStatus');
@@ -29,13 +29,21 @@ async function initOllamaProbe() {
     if (res && res.ok) {
       const data = await res.json();
       const models = data.models || [];
-      const bestQwen = models.find(m => m.name.includes('qwen2.5:3b') || m.name.includes('qwen2.5:1.5b') || m.name.includes('llama3.2') || m.name.includes('qwen'));
-      if (bestQwen) {
-        APP_STATE.activeModel = bestQwen.name;
+      const hasGemini = models.some(m => m.name && m.name.includes('gemini'));
+      if (hasGemini) {
+        APP_STATE.activeModel = 'gemini-3.8-flash';
+        APP_STATE.engineMode = 'gemini';
+        if (modelLabel) modelLabel.innerText = 'GRAM Setu (Gemini 3.8 Flash)';
+        if (sidebarStatus) sidebarStatus.innerText = 'Gemini 3.8 Flash • Active';
+      } else {
+        const bestQwen = models.find(m => m.name.includes('qwen2.5:3b') || m.name.includes('qwen2.5:1.5b') || m.name.includes('llama3.2') || m.name.includes('qwen'));
+        if (bestQwen) {
+          APP_STATE.activeModel = bestQwen.name;
+          APP_STATE.engineMode = 'ollama';
+          if (modelLabel) modelLabel.innerText = `GRAM Setu (${APP_STATE.activeModel})`;
+          if (sidebarStatus) sidebarStatus.innerText = `${APP_STATE.activeModel} • Active`;
+        }
       }
-      APP_STATE.engineMode = 'ollama';
-      if (modelLabel) modelLabel.innerText = `GRAM Setu (${APP_STATE.activeModel})`;
-      if (sidebarStatus) sidebarStatus.innerText = `${APP_STATE.activeModel} • Active`;
     }
   } catch (err) {
     if (modelLabel) modelLabel.innerText = 'GRAM Setu (Offline Engine)';
@@ -67,7 +75,41 @@ function toggleModelMenu() {
 }
 
 function setModel(mode) {
-  APP_STATE.engineMode = mode;
+  APP_STATE.activeModel = mode;
+  if (mode === 'offline') {
+    APP_STATE.engineMode = 'offline';
+  } else if (mode.includes('gemini')) {
+    APP_STATE.engineMode = 'gemini';
+  } else {
+    APP_STATE.engineMode = 'ollama';
+  }
+
+  const modelLabel = document.getElementById('activeModelLabel');
+  const sidebarStatus = document.getElementById('sidebarEngineStatus');
+  if (modelLabel) {
+    if (mode.includes('gemini')) {
+      modelLabel.innerText = 'GRAM Setu (Gemini 3.8 Flash)';
+    } else if (mode === 'offline') {
+      modelLabel.innerText = 'GRAM Setu (Offline Engine)';
+    } else {
+      modelLabel.innerText = `GRAM Setu (${mode})`;
+    }
+  }
+  if (sidebarStatus) {
+    sidebarStatus.innerText = mode.includes('gemini') ? 'Gemini 3.8 Flash • Active' : (mode === 'offline' ? 'Offline Engine • Active' : `${mode} • Active`);
+  }
+
+  // Update active option class in UI dropdown
+  const options = document.querySelectorAll('.model-menu .model-option');
+  options.forEach(opt => {
+    const fnStr = opt.getAttribute('onclick') || '';
+    if (fnStr.includes(mode)) {
+      opt.classList.add('active');
+    } else {
+      opt.classList.remove('active');
+    }
+  });
+
   const menu = document.getElementById('modelMenu');
   if (menu) menu.classList.remove('show');
 }
@@ -261,7 +303,8 @@ async function handleSend() {
       body: JSON.stringify({
         prompt: prompt,
         session_id: APP_STATE.sessionId,
-        model: APP_STATE.activeModel
+        model: APP_STATE.activeModel,
+        history: APP_STATE.conversationHistory.slice(0, -1) // Previous turns before current prompt
       })
     });
 
@@ -716,7 +759,15 @@ function renderProcessingMetadata(meta, thinkContentEl, toolsBarEl, messageBubbl
   const memKeys = Object.entries(meta.memories_used || {}).map(([k, v]) => `${k}=${v}`).join(', ');
   const toolsList = (meta.tools_executed || []).join(', ');
 
+  const stepsHtml = (meta.thinking_steps || []).map((step, idx) => `
+    <div class="think-step-item">
+      <span class="think-step-badge" style="background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3);">STEP ${idx + 1}</span>
+      <span class="think-step-text" style="color: #e2e8f0; font-size: 0.85rem;">${escapeHTML(step)}</span>
+    </div>
+  `).join('');
+
   thinkContentEl.innerHTML = `
+    ${stepsHtml}
     <div class="think-step-item">
       <span class="think-step-badge">INTENT</span>
       <span class="think-step-text"><strong>${escapeHTML(meta.intent)}</strong> (Tone: ${escapeHTML(meta.tone)})</span>
@@ -975,4 +1026,13 @@ function escapeHTML(str) {
   return String(str).replace(/[&<>'"]/g, tag => ({
     '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
   }[tag] || tag));
+}
+
+// Register Offline Service Worker for Mobile PWA
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js')
+      .then(reg => console.log('🌾 GramSetu Mobile Offline ServiceWorker registered:', reg.scope))
+      .catch(err => console.log('ServiceWorker registration note:', err));
+  });
 }
