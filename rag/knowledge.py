@@ -66,7 +66,7 @@ KNOWLEDGE_BASE = [
         "id": "tech_esp32_iot_wifi",
         "category": "tech_hardware",
         "title": "ESP32 Wi-Fi Station & Web Server / MQTT Gateway Setup",
-        "keywords": ["esp32", "wifi", "iot", "nodemcu", "mqtt", "web server", "esp32 code"],
+        "keywords": ["esp32", "wifi", "arduino code", "wifi connect", "esp32 wifi", "esp32 arduino", "arduino esp32", "iot", "nodemcu", "mqtt", "web server", "esp32 code"],
         "summary": "ESP32 dual-core 240MHz microcontroller with built-in 2.4GHz Wi-Fi and BLE 4.2. Connect via WiFi.h.",
         "response": "📡 **ESP32 Wi-Fi & Web Server Gateway Setup Guide:**\n\n1. **हार्डवेयर स्पेसिफिकेशन:**\n   • Xtensa Dual-Core 32-bit LX6 @ 240 MHz, 520 KB SRAM, 4MB Flash, 3.3V Logic.\n\n2. **Wi-Fi Station Connection Code (Arduino IDE / PlatformIO):**\n```cpp\n#include <WiFi.h>\n\nconst char* ssid = \"Your_WiFi_SSID\";\nconst char* password = \"Your_WiFi_Password\";\n\nvoid setup() {\n  Serial.begin(115200);\n  delay(1000);\n  \n  WiFi.mode(WIFI_STA);\n  WiFi.begin(ssid, password);\n  Serial.print(\"Connecting to Wi-Fi\");\n\n  while (WiFi.status() != WL_CONNECTED) {\n    delay(500);\n    Serial.print(\".\");\n  }\n\n  Serial.println(\"\\n✅ Connected Successfully!\");\n  Serial.print(\"IP Address: \");\n  Serial.println(WiFi.localIP());\n}\n\nvoid loop() {\n  // IoT Sensor Telemetry Loop\n}\n```\n3. **सावधानी:** ESP32 के GPIO पिन्स केवल 3.3V सहन कर सकते हैं। 5V सिग्नल जोड़ने पर लेवल शिफ्टर (Level Shifter) का प्रयोग करें।"
     },
