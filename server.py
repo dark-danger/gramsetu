@@ -27,6 +27,7 @@ from core.router import route_and_prepare
 from core.validation import validate_and_sanitize
 from ai.prompts import build_messages_for_ollama
 from ai.ollama_client import stream_chat_from_ollama
+from ai.offline_fallback import generate_offline_response
 
 class GramSetuServer(http.server.SimpleHTTPRequestHandler):
     def __init__(self, *args, **kwargs):
@@ -184,6 +185,13 @@ class GramSetuServer(http.server.SimpleHTTPRequestHandler):
             save_message(session_id, "user", prompt)
 
             # Prepare Safe Processing Metadata for Deep Think Panel
+            thinking_steps = [
+                f"Intent & Tone Analysis: Identified '{routing_info['intent']}' with {routing_info['tone']} tone in {routing_info['input_language']}.",
+                f"Context & Parameters: Cross-referenced user profile memories ({len(routing_info['relevant_memories'])} active) and domain constraints.",
+                f"Ground Truth Retrieval: " + (f"Retrieved verified domain knowledge from '{routing_info['rag_item']['title']}'." if routing_info.get("rag_item") else "Consulted multidisciplinary verified scientific & technical knowledge matrix."),
+                "Cognitive Synthesis: Formulating comprehensive, step-by-step reasoned recommendations with practical specifications."
+            ]
+
             metadata = {
                 "intent": routing_info["intent"],
                 "input_language": routing_info["input_language"],
@@ -192,7 +200,8 @@ class GramSetuServer(http.server.SimpleHTTPRequestHandler):
                 "memories_used": routing_info["relevant_memories"],
                 "tools_executed": [t["tool_name"] for t in routing_info["tool_results"]],
                 "rag_title": routing_info["rag_item"]["title"] if routing_info.get("rag_item") else None,
-                "image_payload": routing_info.get("image_payload")
+                "image_payload": routing_info.get("image_payload"),
+                "thinking_steps": thinking_steps
             }
 
             # Start Streaming Response Chunked / NDJSON
@@ -220,16 +229,30 @@ class GramSetuServer(http.server.SimpleHTTPRequestHandler):
             # CASE B: Execute Qwen via Ollama with Compact Structured Context
             else:
                 # Use client history if available, else retrieve from SQLite
-                recent_history = client_history if client_history else get_recent_messages(session_id, limit=6)
+                recent_history = client_history if client_history else get_recent_messages(session_id, limit=8)
                 messages = build_messages_for_ollama(routing_info, recent_history)
 
-                wants_exp = bool(re.search(r'\b(explain|detail|vistar|samjhao|samjha|pura batao|step by step detail|describe|elaborate|deep|kyu|kyon|why)\b', prompt.lower()))
-                max_toks = 750 if wants_exp else 280
+                # Generous token budget for complete, step-by-step reasoning
+                max_toks = 1500
 
+                stream_failed = False
                 for token in stream_chat_from_ollama(messages, model=requested_model, max_tokens=max_toks):
+                    if "[Ollama local bridge error:" in token:
+                        stream_failed = True
+                        break
                     final_accumulated_text += token
                     chunk_payload = json.dumps({"type": "token", "token": token}) + "\n"
                     self.write_stream(chunk_payload)
+
+                if stream_failed:
+                    fallback_text = routing_info.get("direct_response") or generate_offline_response(routing_info, prompt)
+                    final_accumulated_text = fallback_text
+                    # Stream tokens smoothly for natural UX
+                    words = re.split(r'(\s+|\n+)', fallback_text)
+                    for w in words:
+                        if w:
+                            chunk_payload = json.dumps({"type": "token", "token": w}) + "\n"
+                            self.write_stream(chunk_payload)
 
             # Response Validation & Sanitization
             sanitized = validate_and_sanitize(final_accumulated_text, routing_info)

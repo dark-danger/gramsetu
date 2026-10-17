@@ -13,7 +13,7 @@ from core.memory import (
     get_memory
 )
 from core.context import resolve_context_references
-from tools.agri_tools import calculate_agri_requirements, convert_land_area
+from tools.agri_tools import calculate_agri_requirements, convert_land_area, convert_land_area_from_prompt
 from tools.math_tools import evaluate_math
 from tools.image_tools import create_image_payload
 from rag.knowledge import search_knowledge
@@ -170,9 +170,12 @@ def route_and_prepare(prompt: str, session_id: str = "default", recent_messages:
     # CASE 5: Agriculture & Land Math Tools
     if intent in ["agriculture", "math_calculation"]:
         # Check pure land conversion
-        m_acre = re.search(r'(\d+(?:\.\d+)?)\s*(?:acre|acres|एकड़)', clean_prompt, re.IGNORECASE)
-        if m_acre and re.search(r'\b(bigha|gaj|square yard|convert|hisab)\b', clean_prompt.lower()) and not re.search(r'\b(seed|beej|fertilizer|khad|wheat|gehu|dhan|sarson)\b', clean_prompt.lower()):
-            conv = convert_land_area(float(m_acre.group(1)))
+        is_land_query = re.search(r'\b(acre|acres|एकड़|bigha|bighas|बीघा|hectare|hectares|हेक्टेयर|ha|gaj|गज|yard|yards|feet|foot|ft|sq\s*ft|sqft|square\s*feet|square\s*yard|zameen|jameen|land|khet)\b', clean_prompt.lower())
+        is_conversion_word = re.search(r'\b(convert|conversion|in|to|kitna|kitne|hote|hota|hoga|batao|hisab|feet|foot|ft|sq\s*ft|sqft|square\s*feet|gaj|yard|yards|square\s*yard|bigha|hectare)\b', clean_prompt.lower())
+        is_agri_chem = re.search(r'\b(seed|beej|fertilizer|khad|dap|urea|potash|zinc|wheat|gehu|dhan|sarson|cotton|kapas|ganna)\b', clean_prompt.lower())
+
+        if (is_land_query and is_conversion_word and not is_agri_chem) or (intent == "math_calculation" and is_land_query and not is_agri_chem):
+            conv = convert_land_area_from_prompt(clean_prompt)
             routing_result["direct_response"] = conv["text"]
             routing_result["requires_llm"] = False
             routing_result["tool_results"].append({
@@ -189,14 +192,18 @@ def route_and_prepare(prompt: str, session_id: str = "default", recent_messages:
                 "tool_name": agri_res["tool_name"],
                 "result": agri_res["text"]
             })
+            routing_result["direct_response"] = agri_res["text"]
 
         # Pure Math calculation
         math_res = evaluate_math(clean_prompt)
         if math_res:
+            routing_result["direct_response"] = math_res["text"]
+            routing_result["requires_llm"] = False
             routing_result["tool_results"].append({
                 "tool_name": math_res["tool_name"],
                 "result": math_res["text"]
             })
+            return routing_result
 
     # CASE 6: RAG Knowledge Retrieval across All Domains
     rag_match = search_knowledge(resolved_prompt, threshold=30)

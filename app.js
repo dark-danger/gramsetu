@@ -717,7 +717,15 @@ function renderProcessingMetadata(meta, thinkContentEl, toolsBarEl, messageBubbl
   const memKeys = Object.entries(meta.memories_used || {}).map(([k, v]) => `${k}=${v}`).join(', ');
   const toolsList = (meta.tools_executed || []).join(', ');
 
+  const stepsHtml = (meta.thinking_steps || []).map((step, idx) => `
+    <div class="think-step-item">
+      <span class="think-step-badge" style="background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3);">STEP ${idx + 1}</span>
+      <span class="think-step-text" style="color: #e2e8f0; font-size: 0.85rem;">${escapeHTML(step)}</span>
+    </div>
+  `).join('');
+
   thinkContentEl.innerHTML = `
+    ${stepsHtml}
     <div class="think-step-item">
       <span class="think-step-badge">INTENT</span>
       <span class="think-step-text"><strong>${escapeHTML(meta.intent)}</strong> (Tone: ${escapeHTML(meta.tone)})</span>

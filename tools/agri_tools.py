@@ -82,12 +82,46 @@ def calculate_agri_requirements(prompt: str, user_land_str: str = None) -> dict:
 
     return res
 
-def convert_land_area(acres: float) -> dict:
+def convert_land_area(acres: float, target_unit: str = None) -> dict:
+    acres = max(0.0001, float(acres))
     pucca_bigha = round(acres * 1.6, 2)
     kaccha_bigha = round(acres * 4.8, 2)
-    sq_yards = f"{int(acres * 4840):,}"
-    sq_feet = f"{int(acres * 43560):,}"
+    sq_yards_num = int(round(acres * 4840))
+    sq_feet_num = int(round(acres * 43560))
+    sq_yards = f"{sq_yards_num:,}"
+    sq_feet = f"{sq_feet_num:,}"
     hectares = round(acres * 0.404686, 3)
+    kanal = int(round(acres * 8))
+    marla = int(round(acres * 160))
+    kattha = round(acres * 26.6, 1)
+
+    # Format acres nicely (e.g. 1 instead of 1.0)
+    acres_str = f"{acres:g}"
+
+    # Target unit specific lead line
+    lead_highlight = ""
+    if target_unit in ["feet", "foot", "sq_feet", "sqft"]:
+        lead_highlight = f"📐 **{acres_str} Acre = {sq_feet} Square Feet (वर्ग फुट)**\n\n"
+    elif target_unit in ["yard", "yards", "gaj"]:
+        lead_highlight = f"📐 **{acres_str} Acre = {sq_yards} Square Yards / Gaj (वर्ग गज)**\n\n"
+    elif target_unit in ["bigha", "pucca_bigha"]:
+        lead_highlight = f"📐 **{acres_str} Acre = {pucca_bigha} Pucca Bigha (पक्का बीघा)**\n\n"
+    elif target_unit in ["hectare", "ha"]:
+        lead_highlight = f"📐 **{acres_str} Acre = {hectares} Hectare (हेक्टेयर)**\n\n"
+
+    text = (
+        f"{lead_highlight}"
+        f"📐 **Land Area Calculation for {acres_str} Acre(s) (भूमि माप गणना):**\n\n"
+        f"1. **Universal Measurement Units (सार्वभौमिक इकाइयां):**\n"
+        f"   • **Square Feet (वर्ग फुट):** **{sq_feet} sq. ft** (1 Acre = 43,560 sq. ft)\n"
+        f"   • **Square Yards (वर्ग गज / Gaj):** **{sq_yards} sq. yards** (1 Acre = 4,840 sq. yards)\n"
+        f"   • **Hectares (हेक्टेयर):** **{hectares} Ha** (1 Hectare = 2.471 Acres)\n\n"
+        f"2. **State & Regional Conversions (क्षेत्रीय बीघा व कनाल):**\n"
+        f"   • **UP & Rajasthan (पक्का बीघा):** **{pucca_bigha} Bigha** (1 Bigha = 27,225 sq. ft = 3,025 sq. yards)\n"
+        f"   • **Western UP & Haryana (कच्चा बीघा):** **{kaccha_bigha} Bigha**\n"
+        f"   • **Punjab & Haryana:** **{kanal} Kanal** ({marla} Marla)\n"
+        f"   • **Bihar & Jharkhand:** **{round(acres * 1.33, 2)} Bigha** ({kattha} Kattha)"
+    )
 
     return {
         "acres": acres,
@@ -96,12 +130,63 @@ def convert_land_area(acres: float) -> dict:
         "sq_yards": sq_yards,
         "sq_feet": sq_feet,
         "hectares": hectares,
-        "text": (
-            f"📐 **Land Area Calculation for {acres} Acre(s):**\n\n"
-            f"• **Pucca Bigha (पक्का बीघा):** **{pucca_bigha} Bigha** (Standard: 1 Acre = 1.6 Pucca Bigha)\n"
-            f"• **Kaccha Bigha (कच्चा बीघा):** **{kaccha_bigha} Bigha** (1 Pucca Bigha = 3 Kaccha Bigha)\n"
-            f"• **Square Yards (वर्ग गज / Gaj):** **{sq_yards} sq. yards**\n"
-            f"• **Square Feet (वर्ग फुट):** **{sq_feet} sq. ft**\n"
-            f"• **Hectares (हेक्टेयर):** **{hectares} Ha**"
-        )
+        "kanal": kanal,
+        "marla": marla,
+        "text": text.strip()
     }
+
+def convert_land_area_from_prompt(prompt: str) -> dict:
+    """
+    Parses natural language land measurement queries and performs exact conversions.
+    Handles: '1 acre land in feet', '5 bigha in acre', '2 hectare to feet', etc.
+    """
+    lower = prompt.lower().strip()
+
+    # Determine target unit if asked
+    target_unit = None
+    if re.search(r'\b(feet|foot|ft|sq\s*ft|sqft|square\s*feet|फुट|फिट)\b', lower):
+        target_unit = "feet"
+    elif re.search(r'\b(gaj|yard|yards|sq\s*yard|square\s*yard|गज)\b', lower):
+        target_unit = "gaj"
+    elif re.search(r'\b(bigha|bighas|बीघा)\b', lower) and not re.search(r'\b(\d+(?:\.\d+)?)\s*(?:bigha|bighas|बीघा)\b', lower):
+        target_unit = "bigha"
+    elif re.search(r'\b(hectare|hectares|हेक्टेयर|ha)\b', lower) and not re.search(r'\b(\d+(?:\.\d+)?)\s*(?:hectare|hectares|हेक्टेयर)\b', lower):
+        target_unit = "hectare"
+
+    # 1. Acre match
+    m_acre = re.search(r'(\d+(?:\.\d+)?)\s*(?:acre|acres|एकड़)', lower)
+    if m_acre:
+        acres = float(m_acre.group(1))
+        return convert_land_area(acres, target_unit=target_unit)
+
+    # 2. Bigha match
+    m_bigha = re.search(r'(\d+(?:\.\d+)?)\s*(?:bigha|bighas|बीघा)', lower)
+    if m_bigha:
+        bigha = float(m_bigha.group(1))
+        acres = bigha / 1.6
+        return convert_land_area(acres, target_unit=target_unit or "feet")
+
+    # 3. Hectare match
+    m_ha = re.search(r'(\d+(?:\.\d+)?)\s*(?:hectare|hectares|हेक्टेयर|ha)', lower)
+    if m_ha:
+        ha = float(m_ha.group(1))
+        acres = ha * 2.47105
+        return convert_land_area(acres, target_unit=target_unit or "feet")
+
+    # 4. Sq feet match
+    m_ft = re.search(r'(\d+(?:\.\d+)?)\s*(?:sq\s*ft|sqft|square\s*feet|feet|foot|फुट)', lower)
+    if m_ft:
+        feet = float(m_ft.group(1))
+        acres = feet / 43560.0
+        return convert_land_area(acres, target_unit="bigha")
+
+    # 5. Gaj / Sq Yards match
+    m_gaj = re.search(r'(\d+(?:\.\d+)?)\s*(?:gaj|sq\s*yard|square\s*yard|yard|yards|गज)', lower)
+    if m_gaj:
+        gaj = float(m_gaj.group(1))
+        acres = gaj / 4840.0
+        return convert_land_area(acres, target_unit=target_unit or "feet")
+
+    # Default fallback: 1 Acre
+    return convert_land_area(1.0, target_unit=target_unit or "feet")
+

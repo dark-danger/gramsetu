@@ -41,18 +41,36 @@ def detect_intent(text: str) -> str:
         return "language_switch"
 
     # 6. Math & Land Calculation
-    if re.search(r'(\d+(?:\.\d+)?)\s*(?:acre|acres|bigha|hectare|gaj|square yard)', lower) and \
-       re.search(r'\b(bigha|gaj|square yard|convert|hisab|calculate|kitna|seed|beej|fertilizer|khad)\b', lower):
+    land_unit_kw = r'(?:acre|acres|एकड़|bigha|bighas|बीघा|hectare|hectares|हेक्टेयर|ha|gaj|गज|yard|yards|square yard|square feet|sq ft|sqft|feet|foot|ft|फुट|फिट|कट्ठा|बिस्वा|कनाल|मरला)'
+    if (re.search(r'(\d+(?:\.\d+)?)\s*' + land_unit_kw, lower) or re.search(r'\b(acre|bigha|hectare|feet|foot|sq ft|sqft|gaj)\b', lower)) and \
+       re.search(r'\b(bigha|gaj|yard|yards|square yard|feet|foot|ft|sq ft|sqft|square feet|hectare|biswa|kanal|marla|zameen|jameen|land|khet|convert|conversion|hisab|calculate|kitna|kitne|hoga|seed|beej|fertilizer|khad)\b', lower):
         if re.search(r'\b(seed|beej|fertilizer|khad|dap|urea|wheat|gehu|dhan|sarson)\b', lower):
             return "agriculture"
         return "math_calculation"
+
 
     if re.search(r'(?:calculate|hisab|solve|kitna hoga|\bmath\b)?\s*[0-9\.\s\+\-\*\/\(\)]{3,}[0-9]', lower) and \
        re.search(r'[+\-*/]', lower):
         return "math_calculation"
 
-    # 7. Agriculture Domain & Diagnostics (Crops, Soil, Fertilizer, Irrigation, Dairy/Livestock)
-    if re.search(r'(?:^|[^\w\u0900-\u097F\u0A00-\u0A7F])(wheat|gehu|gehun|गेहूं|गेहू|कनक|dhan|rice|paddy|धान|चावल|झोना|sarson|mustard|सरसों|सरसो|cotton|kapas|कपास|नरमा|ganna|sugarcane|गन्ना|kheti|खेती|खेति|fasal|फसल|फ़सल|crop|keeda|कीड़ा|कीट|sundi|सूंडी|fungus|फंगस|rust|रतुआ|रोली|rot|spray|छिड़काव|स्प्रे|seed rate|beej|बीज|बियां|buwai|बुवाई|बोनी|dap|डीएप|यूरिया|urea|potash|पोटाश|zinc|जिंक|khad|खाद|fertilizer|उर्वरक|irrigation|sinchai|सिंचाई|सिचाई|पानी|pani|paani|soil|mitti|मिट्टी|माटी|npk|ph|gypsum|जिप्सम|chuna|चूना|pashu|पशु|गाय|gay|भैंस|bhains|cow|buffalo|doodh|दूध|milk|thanela|थनैला|mastitis|khurpaka|खुरपका|muhpaka|मुंहपका|fmd)(?:$|[^\w\u0900-\u097F\u0A00-\u0A7F])', lower):
+    # 7. Agriculture Domain & Diagnostics (Crops, Soil, Fertilizer, Irrigation, Machinery, Dairy/Livestock)
+    agri_pattern = (
+        r'(?:^|[^\w\u0900-\u097F\u0A00-\u0A7F])('
+        r'wheat|gehu|gehun|गेहूं|गेहू|कनक|dhan|rice|paddy|धान|चावल|झोना|sarson|mustard|सरसों|सरसो|'
+        r'cotton|kapas|कपास|नरमा|ganna|sugarcane|गन्ना|makka|maize|corn|मक्का|मकई|'
+        r'aloo|potato|आलू|tamatar|tomato|टमाटर|pyaz|onion|प्याज|chana|gram|चना|moong|मूंग|soybean|सोयाबीन|'
+        r'reaper|harvester|rotavator|seeder|रोटावेटर|रीपर|सीडर|कटाई|harvest|harvesting|'
+        r'kheti|खेती|खेति|fasal|फसल|फ़सल|crop|keeda|कीड़ा|कीट|sundi|सूंडी|fungus|फंगस|rust|रतुआ|रोली|rot|'
+        r'jhulsa|झुलसा|blight|borer|whitefly|bollworm|armyworm|thrips|aphid|माहू|चेपा|'
+        r'spray|छिड़काव|स्प्रे|seed rate|beej|बीज|बियां|buwai|बुवाई|बोनी|'
+        r'dap|डीएप|यूरिया|urea|potash|पोटाश|zinc|जिंक|khad|खाद|fertilizer|उर्वरक|'
+        r'vermicompost|वर्मीकम्पोस्ट|kechua|केंचुआ|gobar|गोबर|'
+        r'irrigation|sinchai|सिंचाई|सिचाई|पानी|pani|paani|drip|fertigation|टपक|'
+        r'soil|mitti|मिट्टी|माटी|npk|ph|gypsum|जिप्सम|chuna|चूना|'
+        r'pashu|पशु|गाय|gay|भैंस|bhains|cow|buffalo|doodh|दूध|milk|thanela|थनैला|mastitis|khurpaka|खुरपका|muhpaka|मुंहपका|fmd'
+        r')(?:$|[^\w\u0900-\u097F\u0A00-\u0A7F])'
+    )
+    if re.search(agri_pattern, lower):
         return "agriculture"
 
     # 8. Government Schemes (KCC, PM Kisan, Ayushman, Fasal Bima, Kusum, Soil Card)
@@ -63,8 +81,9 @@ def detect_intent(text: str) -> str:
     if re.search(r'(?:^|[^\w\u0900-\u097F\u0A00-\u0A7F])(cpr|cardiac arrest|heart attack|snake|saanp|सांप|साँप|bite|काटना|katna|डसना|current|electric shock|करंट|burn|जलना|jalna|bleeding|खून|khoon|poison|zehar|ज़हर|choking|fracture|हड्डी|blood pressure|bp|pulse rate|heart rate|spo2|vital signs|fever|bukhar|बुखार|तावत|temperature|tapman|तापमान|sugar level|dast|दस्त|loose motion|diarrhea|vomiting|ulti|उल्टी|pet dard|पेट दर्द|stomach pain|headache|sardard|सिरदर्द|chot|चोट|injury|wound|ghav|घाव|first aid|प्राथमिक उपचार)(?:$|[^\w\u0900-\u097F\u0A00-\u0A7F])', lower):
         return "medical"
 
-    # 10. Pharmaceutical & Pharmacology
-    if re.search(r'(?:^|[^\w\u0900-\u097F\u0A00-\u0A7F])(paracetamol|पैरासिटामोल|amoxicillin|antibiotic|antibiotics|एंटीबायोटिक|nsaid|nsaids|antipyretic|antihistamine|ppi|omeprazole|pantoprazole|azithromycin|ibuprofen|drug|medicine|dosage|खुराक|adme|pharmacokinetics|cold chain|vaccine|टीका|dawa|दवा|दवाई|dawai|tablet|goli|गोली)(?:$|[^\w\u0900-\u097F\u0A00-\u0A7F])', lower):
+    # 10. Pharmaceutical & Human Pharmacology (Only when not agricultural)
+    if re.search(r'(?:^|[^\w\u0900-\u097F\u0A00-\u0A7F])(paracetamol|पैरासिटामोल|amoxicillin|antibiotic|antibiotics|एंटीबायोटिक|nsaid|nsaids|antipyretic|antihistamine|ppi|omeprazole|pantoprazole|azithromycin|ibuprofen|drug|medicine|dosage|खुराक|adme|pharmacokinetics|cold chain|vaccine|टीका|tablet|goli|गोली)(?:$|[^\w\u0900-\u097F\u0A00-\u0A7F])', lower) or \
+       (re.search(r'\b(dawa|दवा|दवाई|dawai)\b', lower) and not re.search(r'\b(fasal|khet|kheti|paudha|crop|gehu|wheat|dhan|rice|sarson|kapas|ganna|aloo|tamatar|keeda|sundi|pest)\b', lower)):
         return "pharmaceutical"
 
     # 11. Biology & Life Sciences

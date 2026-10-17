@@ -14,16 +14,16 @@ def stream_chat_from_ollama(messages: list, model: str = None, max_tokens: int =
     target_model = model or OLLAMA_MODEL
     url = f"{OLLAMA_URL}/api/chat"
     
-    predict_tokens = max_tokens if max_tokens else 320
+    predict_tokens = max_tokens if max_tokens else 1500
 
     payload = {
         "model": target_model,
         "messages": messages,
         "stream": True,
         "options": {
-            "temperature": 0.25,
-            "top_p": 0.85,
-            "repeat_penalty": 1.15,
+            "temperature": 0.45,
+            "top_p": 0.90,
+            "repeat_penalty": 1.12,
             "num_predict": predict_tokens,
             "stop": [
                 "<|im_end|>", "<|im_start|>",

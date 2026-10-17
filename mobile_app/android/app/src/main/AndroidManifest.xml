@@ -1,5 +1,4 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.gramsetu.ai">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
     
     <!-- Permissions for Offline Audio, Voice Mic, Emergency Calling, and Local Network -->
     <uses-permission android:name="android.permission.INTERNET" />

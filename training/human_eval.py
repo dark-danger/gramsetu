@@ -101,6 +101,86 @@ TEST_CASES = [
         "expected_intent": "agriculture",
         "must_contain": ["Eisenia fetida", "गोबर", "केंचुआ"],
         "must_have_tools": ["Vermicompost"]
+    },
+    # 11. POTATO LATE BLIGHT
+    {
+        "id": "potato_late_blight",
+        "prompt": "aloo me picheti jhulsa rog lag gaya h kya dawai dalein?",
+        "expected_intent": "agriculture",
+        "must_contain": ["Mancozeb", "झुलसा"],
+        "must_have_tools": ["Potato"]
+    },
+    # 12. SUGARCANE BORER PEST
+    {
+        "id": "sugarcane_top_borer",
+        "prompt": "ganne me top borer ke liye coragen ka kitna dose dalein?",
+        "expected_intent": "agriculture",
+        "must_contain": ["Coragen", "150"],
+        "must_have_tools": ["Sugarcane"]
+    },
+    # 13. TOMATO LEAF CURL VIRUS
+    {
+        "id": "tomato_leaf_curl",
+        "prompt": "tamatar me leaf curl marodiya rog me safed makkhi kaise roke?",
+        "expected_intent": "agriculture",
+        "must_contain": ["Acetamiprid", "Whitefly"],
+        "must_have_tools": ["Tomato"]
+    },
+    # 14. DAIRY CATTLE MILK YIELD BOOSTER
+    {
+        "id": "dairy_milk_yield",
+        "prompt": "gay aur bhains ka doodh badhane ke liye kya aahar de?",
+        "expected_intent": "agriculture",
+        "must_contain": ["दूध", "दाना", "चारा"],
+        "must_have_tools": ["Milk"]
+    },
+    # 15. ESP32 WI-FI ARDUINO
+    {
+        "id": "esp32_wifi_arduino",
+        "prompt": "esp32 ko wifi se connect karne ka arduino code batao",
+        "expected_intent": "tech_hardware",
+        "must_contain": ["WiFi.h", "115200"],
+        "must_have_tools": ["ESP32"]
+    },
+    # 16. PYTHON BINARY SEARCH
+    {
+        "id": "python_binary_search",
+        "prompt": "python me binary search algorithm kaise likhein aur time complexity kya hai?",
+        "expected_intent": "coding_technical",
+        "must_contain": ["binary_search", "O(log n)"],
+        "must_have_tools": ["Binary Search"]
+    },
+    # 17. KISAN CREDIT CARD LOAN
+    {
+        "id": "scheme_kcc_loan",
+        "prompt": "kcc loan par kitna percent byaj lagta hai?",
+        "expected_intent": "government_scheme",
+        "must_contain": ["4%", "3 लाख"],
+        "must_have_tools": ["Kisan Credit Card"]
+    },
+    # 18. PM-KUSUM SOLAR PUMP
+    {
+        "id": "scheme_pm_kusum_solar",
+        "prompt": "pm kusum solar pump scheme me kitni subsidy milti hai?",
+        "expected_intent": "government_scheme",
+        "must_contain": ["कुसुम", "सब्सिडी"],
+        "must_have_tools": ["KUSUM"]
+    },
+    # 19. TRACTOR REAPER / HARVESTER
+    {
+        "id": "machinery_reaper_harvester",
+        "prompt": "sweet corn aur makka katne ke liye kaunsa harvester lagaye?",
+        "expected_intent": "agriculture",
+        "must_contain": ["Harvester"],
+        "must_have_tools": ["Reaper"]
+    },
+    # 20. LAND AREA CONVERSION
+    {
+        "id": "land_area_conversion",
+        "prompt": "1 acre zameen me kitne square feet hote hain?",
+        "expected_intent": "math_calculation",
+        "must_contain": ["43,560", "Square Feet"],
+        "must_have_tools": ["Land Unit Converter"]
     }
 ]
 

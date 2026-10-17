@@ -7,7 +7,10 @@ import urllib.request
 import json
 import time
 
-SERVER_URL = "http://localhost:8000/api/chat"
+import os
+
+PORT = int(os.environ.get("PORT", 8000))
+SERVER_URL = os.environ.get("SERVER_URL", f"http://localhost:{PORT}/api/chat")
 
 def chat_turn(prompt, session_id="live_user_session"):
     print(f"\n💬 USER: \"{prompt}\"")

@@ -8,3 +8,4 @@ __pycache__/
 build/
 .dart_tool/
 *.db
+*.apk

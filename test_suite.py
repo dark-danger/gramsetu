@@ -10,8 +10,9 @@ import os
 import sys
 import time
 
-SERVER_URL = "http://localhost:8000/api/chat"
-DB_PATH = "/Users/yash/AI-system/gramsetu.db"
+PORT = int(os.environ.get("PORT", 8000))
+SERVER_URL = os.environ.get("SERVER_URL", f"http://localhost:{PORT}/api/chat")
+DB_PATH = os.environ.get("DB_PATH", "/Users/yash/AI-system/gramsetu.db")
 
 from core.database import get_memory, clear_all_memories, get_connection
 

@@ -117,9 +117,18 @@ def resolve_context_references(current_prompt: str, session_id: str = "default",
     word_count = len(clean.split())
     has_pronoun = any(re.search(pat, lower) for pat in PRONOUN_PATTERNS)
     is_elliptical_prefix = any(re.search(pat, lower) for pat in ELLIPTICAL_PREFIXES)
-    
-    # Check if prompt is a short follow-up (e.g. <= 7 words like "sweet corn katni h", "makka ke liye", "aur spray kab kare")
-    is_short_followup = word_count <= 7 and not re.search(r'\b(who are you|hello|hi|namaste|mera naam|my name)\b', lower)
+
+    # Check if prompt has its own distinct subject/entity (self-contained query)
+    has_own_subject = bool(re.search(
+        r'\b(kechua|vermicompost|gobar\s*khad|compost|arduino|esp32|sensor|relay|python|fastapi|javascript|code|loop|'
+        r'pm\s*kisan|kcc|ayushman|yojana|scheme|subsidy|snake|saanp|saap|fever|bukhar|dawai|tablet|paracetamol|'
+        r'wheat|gehu|dhan|paddy|rice|mustard|sarson|cotton|kapas|aloo|potato|tomato|tamatar|onion|pyaz|ganna|sugarcane|'
+        r'cow|buffalo|gay|bhains|doodh|milk|poultry|murgi|goat|bakri|solar\s*pump|boring|tube\s*well)\b',
+        lower
+    ))
+
+    # Genuine short follow-ups are fragments (<= 7 words) that lack an independent subject
+    is_short_followup = (word_count <= 7 and not has_own_subject and not re.search(r'\b(who are you|hello|hi|namaste|mera naam|my name)\b', lower))
 
     # Extract topic from previous turns
     prev_topic = None
@@ -132,7 +141,8 @@ def resolve_context_references(current_prompt: str, session_id: str = "default",
     resolved = clean
     inherited_intent = None
 
-    if (has_pronoun or is_elliptical_prefix or is_short_followup) and prev_topic and prev_topic["action"]:
+    # Only inherit previous topic if prompt is an explicit pronoun reference, continuation prefix, or genuine context fragment
+    if (has_pronoun or is_elliptical_prefix or (is_short_followup and not has_own_subject)) and prev_topic and prev_topic["action"]:
         
         # Scenario A: Machinery Follow-up (e.g. Prev = Tractor crops cutting -> Curr = "sweet corn katni h")
         if prev_topic["action"] == "machinery_implement_harvesting":
