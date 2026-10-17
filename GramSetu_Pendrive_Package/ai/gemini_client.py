@@ -68,36 +68,47 @@ def stream_chat_from_gemini(system_prompt: str, history: list, user_prompt: str,
         }
 
     data = json.dumps(payload).encode("utf-8")
-    req = urllib.request.Request(
-        url,
-        data=data,
-        headers={"Content-Type": "application/json"},
-        method="POST"
-    )
-
-    try:
-        with urllib.request.urlopen(req, timeout=30) as resp:
-            for line in resp:
-                line_str = line.decode("utf-8").strip()
-                if not line_str:
-                    continue
-                if line_str.startswith("data:"):
-                    json_str = line_str[5:].strip()
-                    if not json_str:
+    
+    max_retries = 3
+    for attempt in range(max_retries):
+        req = urllib.request.Request(
+            url,
+            data=data,
+            headers={"Content-Type": "application/json"},
+            method="POST"
+        )
+        try:
+            with urllib.request.urlopen(req, timeout=30) as resp:
+                for line in resp:
+                    line_str = line.decode("utf-8").strip()
+                    if not line_str:
                         continue
-                    try:
-                        chunk = json.loads(json_str)
-                        candidates = chunk.get("candidates", [])
-                        if candidates:
-                            parts = candidates[0].get("content", {}).get("parts", [])
-                            for p in parts:
-                                token = p.get("text", "")
-                                if token:
-                                    yield token
-                    except Exception:
-                        pass
-    except Exception as e:
-        yield f"\n[Gemini bridge error: {str(e)}. Seamlessly engaging local verified intelligence.]"
+                    if line_str.startswith("data:"):
+                        json_str = line_str[5:].strip()
+                        if not json_str:
+                            continue
+                        try:
+                            chunk = json.loads(json_str)
+                            candidates = chunk.get("candidates", [])
+                            if candidates:
+                                parts = candidates[0].get("content", {}).get("parts", [])
+                                for p in parts:
+                                    token = p.get("text", "")
+                                    if token:
+                                        yield token
+                        except Exception:
+                            pass
+                return  # Success
+        except urllib.error.HTTPError as e:
+            if e.code == 429 and attempt < max_retries - 1:
+                import time
+                time.sleep(1.5 * (attempt + 1))
+                continue
+            yield f"\n[Gemini bridge error: HTTP Error {e.code}: {e.reason}. Seamlessly engaging local verified intelligence.]"
+            return
+        except Exception as e:
+            yield f"\n[Gemini bridge error: {str(e)}. Seamlessly engaging local verified intelligence.]"
+            return
 
 def generate_gemini_sync(system_prompt: str, history: list, user_prompt: str, model: str = None) -> str:
     """Non-streaming synchronous generator."""

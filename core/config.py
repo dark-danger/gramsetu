@@ -47,6 +47,6 @@ def _resolve_gemini_api_key():
     return ""
 
 GEMINI_API_KEY = _resolve_gemini_api_key()
-GEMINI_MODEL = os.environ.get("GEMINI_MODEL", "gemini-3.8-flash")
+GEMINI_MODEL = os.environ.get("GEMINI_MODEL", "gemini-3.5-flash")
 MAX_CONTEXT_TURNS = 10
 

@@ -12,8 +12,8 @@ def validate_and_sanitize(response_text: str, routing_info: dict) -> str:
 
     out = response_text.strip()
 
-    # 0. If direct deterministic response was generated, return it untouched
-    if routing_info.get("direct_response"):
+    # 0. If direct deterministic response was requested (no LLM required), return it untouched
+    if routing_info.get("direct_response") and not routing_info.get("requires_llm"):
         return routing_info["direct_response"]
 
     # 1. Strip raw thinking tags if any leaked

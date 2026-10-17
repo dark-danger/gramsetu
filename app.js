@@ -20,10 +20,24 @@ document.addEventListener('DOMContentLoaded', () => {
   updateReasoningToggleUI();
 });
 
-// Fetch active model list from Backend (Gemini / Ollama)
+let RUNTIME_GEMINI_KEY = localStorage.getItem('gramsetu_gemini_key') || '';
+
+// Fetch active model list and configuration from Backend (Gemini / Ollama)
 async function initOllamaProbe() {
   const modelLabel = document.getElementById('activeModelLabel');
   const sidebarStatus = document.getElementById('sidebarEngineStatus');
+
+  try {
+    const cfgRes = await fetch('/api/config', { cache: 'no-store' });
+    if (cfgRes && cfgRes.ok) {
+      const cfg = await cfgRes.json();
+      if (cfg.gemini_key) {
+        RUNTIME_GEMINI_KEY = cfg.gemini_key;
+        localStorage.setItem('gramsetu_gemini_key', cfg.gemini_key);
+      }
+    }
+  } catch (e) {}
+
   try {
     const res = await fetch('/api/tags', { cache: 'no-store' });
     if (res && res.ok) {
@@ -46,7 +60,14 @@ async function initOllamaProbe() {
       }
     }
   } catch (err) {
-    if (modelLabel) modelLabel.innerText = 'GRAM Setu (Offline Engine)';
+    if (RUNTIME_GEMINI_KEY) {
+      APP_STATE.activeModel = 'gemini-3.8-flash';
+      APP_STATE.engineMode = 'gemini';
+      if (modelLabel) modelLabel.innerText = 'GRAM Setu (Gemini 3.8 Flash • Direct)';
+      if (sidebarStatus) sidebarStatus.innerText = 'Gemini 3.8 Flash • Cloud Active';
+    } else {
+      if (modelLabel) modelLabel.innerText = 'GRAM Setu (Offline Engine)';
+    }
   }
 }
 
@@ -370,22 +391,145 @@ async function handleSend() {
     syncBackendMemories();
 
   } catch (err) {
-    console.warn('Local Python server not reachable, seamlessly switching to 100% On-Device Offline Client Engine:', err);
+    console.warn('Local Python server chat failed, attempting direct Gemini cloud intelligence:', err);
     
-    const clientResult = processOfflineClientQuery(prompt);
-    
-    renderProcessingMetadata({
-      intent: clientResult.intent,
-      tone: clientResult.tone,
-      input_language: "Hindi / Hinglish / English",
-      output_language: "Hindi / Hinglish",
-      tools_executed: clientResult.tools_executed,
-      rag_title: clientResult.rag_title
-    }, thinkContent, toolsBar, assistantBubble);
+    const geminiKey = RUNTIME_GEMINI_KEY || localStorage.getItem('gramsetu_gemini_key');
+    let geminiDirectSuccess = false;
 
-    await streamClientText(clientResult.text, textEl, thinkHeader, startTime);
-    APP_STATE.conversationHistory.push({ role: 'assistant', content: clientResult.text });
+    if (geminiKey) {
+      try {
+        geminiDirectSuccess = await streamGeminiDirectFromBrowser(prompt, textEl, thinkContent, toolsBar, assistantBubble, startTime);
+      } catch (gemErr) {
+        console.warn('Direct Gemini call failed:', gemErr);
+        geminiDirectSuccess = false;
+      }
+    }
+
+    if (!geminiDirectSuccess) {
+      const clientResult = processOfflineClientQuery(prompt);
+      
+      renderProcessingMetadata({
+        intent: clientResult.intent,
+        tone: clientResult.tone,
+        input_language: "Hindi / Hinglish / English",
+        output_language: "Hindi / Hinglish",
+        tools_executed: clientResult.tools_executed,
+        rag_title: clientResult.rag_title
+      }, thinkContent, toolsBar, assistantBubble);
+
+      await streamClientText(clientResult.text, textEl, thinkHeader, startTime);
+      APP_STATE.conversationHistory.push({ role: 'assistant', content: clientResult.text });
+    }
   }
+}
+
+// Direct Browser-to-Gemini API Streaming
+async function streamGeminiDirectFromBrowser(prompt, textEl, thinkContent, toolsBar, assistantBubble, startTime) {
+  const geminiKey = RUNTIME_GEMINI_KEY || localStorage.getItem('gramsetu_gemini_key');
+  if (!geminiKey) return false;
+
+  renderProcessingMetadata({
+    intent: "AI Reasoning & Dynamic Dialogue",
+    tone: "Knowledgeable, empathetic mentor",
+    input_language: "Auto-detected",
+    output_language: "Hindi / Hinglish / English",
+    engine: "Google Gemini 3.8 Flash (Direct Cloud Stream)",
+    thinking_steps: [
+      "Query Analysis: Deconstructing user requirements, context, and language.",
+      "Cloud Intelligence: Connecting to Google Gemini 3.8 Flash via SSE streaming.",
+      "Cognitive Synthesis: Generating contextual, non-repetitive expert response."
+    ]
+  }, thinkContent, toolsBar, assistantBubble);
+
+  const contents = [];
+  for (const turn of APP_STATE.conversationHistory.slice(-8)) {
+    contents.push({
+      role: turn.role === 'assistant' ? 'model' : 'user',
+      parts: [{ text: turn.content }]
+    });
+  }
+
+  // Ensure strict role alternation for Gemini
+  const sanitizedContents = [];
+  for (const c of contents) {
+    if (sanitizedContents.length && sanitizedContents[sanitizedContents.length - 1].role === c.role) {
+      sanitizedContents[sanitizedContents.length - 1].parts.push(c.parts[0]);
+    } else {
+      sanitizedContents.push(c);
+    }
+  }
+
+  if (sanitizedContents.length && sanitizedContents[sanitizedContents.length - 1].role === 'user') {
+    sanitizedContents[sanitizedContents.length - 1].parts.push({ text: prompt });
+  } else {
+    sanitizedContents.push({ role: 'user', parts: [{ text: prompt }] });
+  }
+
+  const payload = {
+    contents: sanitizedContents,
+    systemInstruction: {
+      parts: [{
+        text: "You are GramSetu AI (ग्रामसेतु एआई), an elite, deeply thoughtful, multidisciplinary AI assistant. You serve farmers, students, developers, and citizens with accurate, step-by-step reasoning. Always answer freshly and contextually in the user's language (Hindi/Hinglish/English). Never recite canned responses; think through their question and provide genuine, practical solutions."
+      }]
+    },
+    generationConfig: {
+      temperature: 0.5,
+      maxOutputTokens: 2048,
+      topP: 0.95
+    }
+  };
+
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:streamGenerateContent?key=${geminiKey}&alt=sse`;
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  });
+
+  if (!response.ok) {
+    throw new Error(`Gemini status ${response.status}`);
+  }
+
+  const reader = response.body.getReader();
+  const decoder = new TextDecoder();
+  let accumulatedText = '';
+  let buffer = '';
+
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+
+    buffer += decoder.decode(value, { stream: true });
+    const lines = buffer.split('\n');
+    buffer = lines.pop();
+
+    for (const line of lines) {
+      const trimmed = line.trim();
+      if (!trimmed || !trimmed.startsWith('data:')) continue;
+      const jsonStr = trimmed.substring(5).trim();
+      if (!jsonStr) continue;
+      try {
+        const chunk = JSON.parse(jsonStr);
+        const candidates = chunk.candidates || [];
+        if (candidates.length) {
+          const parts = candidates[0].content?.parts || [];
+          for (const p of parts) {
+            if (p.text) {
+              accumulatedText += p.text;
+              textEl.innerHTML = renderMarkdownHTML(accumulatedText);
+              scrollToBottom();
+            }
+          }
+        }
+      } catch (e) {}
+    }
+  }
+
+  if (accumulatedText.trim()) {
+    APP_STATE.conversationHistory.push({ role: 'assistant', content: accumulatedText });
+    return true;
+  }
+  return false;
 }
 
 // 100% On-Device Client-Side Offline Intelligence Engine

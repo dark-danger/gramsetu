@@ -120,23 +120,12 @@ def route_and_prepare(prompt: str, session_id: str = "default", recent_messages:
     if intent == "greeting":
         user_name_mem = get_memory("user_name")
         name_suffix = f", {user_name_mem['value']}" if user_name_mem else ""
-        
-        if output_lang == "punjabi":
-            greet = f"ਸਤਿ ਸ਼੍ਰੀ ਅਕਾਲ{name_suffix}! ਮੈਂ ਬਿਲਕੁਲ ਠੀਕ ਹਾਂ। ਦੱਸੋ, ਮੈਂ ਤੁਹਾਡੀ ਕੀ ਮਦद ਕਰ ਸਕਦਾ ਹਾਂ?"
-        elif output_lang == "hindi":
-            greet = f"नमस्ते{name_suffix}! मैं बिल्कुल ठीक हूँ। आप बताइए, आज मैं आपकी क्या सहायता कर सकता हूँ?"
-        elif output_lang == "hinglish":
-            greet = f"Main bilkul badhiya hoon{name_suffix}! Aap bataiye, aaj main aapki kya madad kar sakta hoon?"
-        else:
-            greet = f"Hello{name_suffix}! I'm doing great. How can I assist you today?"
-            
-        routing_result["direct_response"] = greet
-        routing_result["requires_llm"] = False
+        routing_result["requires_llm"] = True
         routing_result["tool_results"].append({
-            "tool_name": "Conversational Agent",
-            "result": greet
+            "tool_name": "Conversational Intelligence Engine",
+            "result": f"Active user context: {name_suffix.strip(', ')}" if name_suffix else "Polite natural dialogue"
         })
-        return routing_result
+        # Let LLM synthesize fresh, authentic conversational responses every time!
 
     # CASE 3: Image Generation
     if intent == "image_generation":

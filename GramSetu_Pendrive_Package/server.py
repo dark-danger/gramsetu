@@ -48,6 +48,11 @@ class GramSetuServer(http.server.SimpleHTTPRequestHandler):
         self.end_headers()
 
     def do_GET(self):
+        # 0. API: System Configuration & Gemini status
+        if self.path == '/api/config':
+            self.handle_get_config()
+            return
+
         # 1. API: List available models from local Ollama
         if self.path.startswith('/api/tags') or self.path.startswith('/api/ollama/tags'):
             self.proxy_ollama_tags()
@@ -120,6 +125,17 @@ class GramSetuServer(http.server.SimpleHTTPRequestHandler):
         self.send_header('Content-Type', 'application/json')
         self.end_headers()
         self.wfile.write(json.dumps({"models": models}).encode('utf-8'))
+
+    def handle_get_config(self):
+        self.send_response(200)
+        self.send_header('Content-Type', 'application/json')
+        self.end_headers()
+        self.wfile.write(json.dumps({
+            "status": "ok",
+            "gemini_available": is_gemini_available(),
+            "gemini_model": GEMINI_MODEL,
+            "gemini_key": GEMINI_API_KEY
+        }).encode('utf-8'))
 
     def handle_get_memories(self):
         mems = get_all_memories()

@@ -13,10 +13,11 @@ from core.memory import (
     get_memory
 )
 from core.context import resolve_context_references
-from tools.agri_tools import calculate_agri_requirements, convert_land_area
+from tools.agri_tools import calculate_agri_requirements, convert_land_area, convert_land_area_from_prompt
 from tools.math_tools import evaluate_math
 from tools.image_tools import create_image_payload
 from rag.knowledge import search_knowledge
+from core.lora_adapter import analyze_and_adapt_prompt
 PUNJABI_NAME_MAP = {
     "yash": "ਯਸ਼", "rahul": "ਰਾਹੁਲ", "aman": "ਅਮਨ", "rohan": "ਰੋਹਨ",
     "simran": "ਸਿਮਰਨ", "harpreet": "ਹਰਪ੍ਰੀਤ", "gurpreet": "ਗੁਰਪ੍ਰੀਤ",
@@ -32,7 +33,7 @@ def transliterate_to_gurmukhi(name: str) -> str:
     lower = name.lower().strip()
     return PUNJABI_NAME_MAP.get(lower, name)
 
-def route_and_prepare(prompt: str, session_id: str = "default") -> dict:
+def route_and_prepare(prompt: str, session_id: str = "default", recent_messages: list = None) -> dict:
     """
     Executes the deterministic preprocessing pipeline.
     Returns payload with metadata, tool results, memory context, and routing decision.
@@ -52,11 +53,17 @@ def route_and_prepare(prompt: str, session_id: str = "default") -> dict:
     # 4. Deterministic Memory Extraction
     extracted_memories = extract_and_store_memories(clean_prompt)
 
-    # 5. Multi-Turn Context & Pronoun Resolution
-    resolved_prompt = resolve_context_references(clean_prompt, session_id=session_id)
+    # 5. Multi-Turn Context & Elliptical Topic Resolution
+    context_info = resolve_context_references(clean_prompt, session_id=session_id, recent_messages=recent_messages)
+    resolved_prompt = context_info.get("resolved_prompt", clean_prompt)
+    if context_info.get("inherited_intent") and intent in ["general_discussion", "simple_transformation"]:
+        intent = context_info["inherited_intent"]
 
     # 6. Retrieve Relevant Memories
     relevant_memories = get_relevant_memories_for_prompt(resolved_prompt)
+
+    # 7. LoRA Multi-Dialect & Parameter Analysis
+    lora_analysis = analyze_and_adapt_prompt(resolved_prompt)
 
     # Initialize Routing Result
     routing_result = {
@@ -68,8 +75,10 @@ def route_and_prepare(prompt: str, session_id: str = "default") -> dict:
         "tone": tone_info["tone"],
         "style_prompt": tone_info["style_prompt"],
         "intent": intent,
+        "context_info": context_info,
         "extracted_memories": extracted_memories,
         "relevant_memories": relevant_memories,
+        "lora_adapter": lora_analysis,
         "direct_response": None,
         "tool_results": [],
         "rag_item": None,
@@ -111,23 +120,12 @@ def route_and_prepare(prompt: str, session_id: str = "default") -> dict:
     if intent == "greeting":
         user_name_mem = get_memory("user_name")
         name_suffix = f", {user_name_mem['value']}" if user_name_mem else ""
-        
-        if output_lang == "punjabi":
-            greet = f"ਸਤਿ ਸ਼੍ਰੀ ਅਕਾਲ{name_suffix}! ਮੈਂ ਬਿਲਕੁਲ ਠੀਕ ਹਾਂ। ਦੱਸੋ, ਮੈਂ ਤੁਹਾਡੀ ਕੀ ਮਦद ਕਰ ਸਕਦਾ ਹਾਂ?"
-        elif output_lang == "hindi":
-            greet = f"नमस्ते{name_suffix}! मैं बिल्कुल ठीक हूँ। आप बताइए, आज मैं आपकी क्या सहायता कर सकता हूँ?"
-        elif output_lang == "hinglish":
-            greet = f"Main bilkul badhiya hoon{name_suffix}! Aap bataiye, aaj main aapki kya madad kar sakta hoon?"
-        else:
-            greet = f"Hello{name_suffix}! I'm doing great. How can I assist you today?"
-            
-        routing_result["direct_response"] = greet
-        routing_result["requires_llm"] = False
+        routing_result["requires_llm"] = True
         routing_result["tool_results"].append({
-            "tool_name": "Conversational Agent",
-            "result": greet
+            "tool_name": "Conversational Intelligence Engine",
+            "result": f"Active user context: {name_suffix.strip(', ')}" if name_suffix else "Polite natural dialogue"
         })
-        return routing_result
+        # Let LLM synthesize fresh, authentic conversational responses every time!
 
     # CASE 3: Image Generation
     if intent == "image_generation":
@@ -161,9 +159,12 @@ def route_and_prepare(prompt: str, session_id: str = "default") -> dict:
     # CASE 5: Agriculture & Land Math Tools
     if intent in ["agriculture", "math_calculation"]:
         # Check pure land conversion
-        m_acre = re.search(r'(\d+(?:\.\d+)?)\s*(?:acre|acres|एकड़)', clean_prompt, re.IGNORECASE)
-        if m_acre and re.search(r'\b(bigha|gaj|square yard|convert|hisab)\b', clean_prompt.lower()) and not re.search(r'\b(seed|beej|fertilizer|khad|wheat|gehu|dhan|sarson)\b', clean_prompt.lower()):
-            conv = convert_land_area(float(m_acre.group(1)))
+        is_land_query = re.search(r'\b(acre|acres|एकड़|bigha|bighas|बीघा|hectare|hectares|हेक्टेयर|ha|gaj|गज|yard|yards|feet|foot|ft|sq\s*ft|sqft|square\s*feet|square\s*yard|zameen|jameen|land|khet)\b', clean_prompt.lower())
+        is_conversion_word = re.search(r'\b(convert|conversion|in|to|kitna|kitne|hote|hota|hoga|batao|hisab|feet|foot|ft|sq\s*ft|sqft|square\s*feet|gaj|yard|yards|square\s*yard|bigha|hectare)\b', clean_prompt.lower())
+        is_agri_chem = re.search(r'\b(seed|beej|fertilizer|khad|dap|urea|potash|zinc|wheat|gehu|dhan|sarson|cotton|kapas|ganna)\b', clean_prompt.lower())
+
+        if (is_land_query and is_conversion_word and not is_agri_chem) or (intent == "math_calculation" and is_land_query and not is_agri_chem):
+            conv = convert_land_area_from_prompt(clean_prompt)
             routing_result["direct_response"] = conv["text"]
             routing_result["requires_llm"] = False
             routing_result["tool_results"].append({
@@ -180,35 +181,40 @@ def route_and_prepare(prompt: str, session_id: str = "default") -> dict:
                 "tool_name": agri_res["tool_name"],
                 "result": agri_res["text"]
             })
+            routing_result["direct_response"] = agri_res["text"]
 
         # Pure Math calculation
         math_res = evaluate_math(clean_prompt)
         if math_res:
+            routing_result["direct_response"] = math_res["text"]
+            routing_result["requires_llm"] = False
             routing_result["tool_results"].append({
                 "tool_name": math_res["tool_name"],
                 "result": math_res["text"]
             })
+            return routing_result
 
     # CASE 6: RAG Knowledge Retrieval across All Domains
     rag_match = search_knowledge(resolved_prompt, threshold=30)
     if rag_match:
         routing_result["rag_item"] = rag_match
         routing_result["tool_results"].append({
-            "tool_name": f"Verified RAG: {rag_match['title']}",
+            "tool_name": f"Verified Knowledge: {rag_match['title']}",
             "result": rag_match["response"]
         })
         
         # Assemble complete, verified, 100% accurate ground truth response
         full_response = rag_match["response"]
         user_land = relevant_memories.get("land_area")
-        # Only prepend seed & fertilizer calculation if query is asking about seeds, fertilizers, or quantity
+        # Prepend calculation if applicable
         if user_land and intent == "agriculture" and re.search(r'\b(seed|beej|fertilizer|khad|dap|urea|potash|zinc|acre|kitna|kitni|dar)\b', clean_prompt.lower()):
             agri_calc = calculate_agri_requirements(resolved_prompt, user_land_str=user_land)
             if agri_calc and "text" in agri_calc and agri_calc["text"] not in full_response:
                 full_response = f"{agri_calc['text']}\n\n---\n\n{full_response}"
         
         routing_result["direct_response"] = full_response
-        routing_result["requires_llm"] = False
+        # Allow LLM to dynamically synthesize and customize the verified data for the user's specific dialect, tone & parameters
+        routing_result["requires_llm"] = True
         return routing_result
 
     return routing_result

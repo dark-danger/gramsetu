@@ -282,7 +282,7 @@ KNOWLEDGE_BASE = [
         "id": "agri_tomato_cultivation",
         "category": "agriculture",
         "title": "Tomato Farming & Leaf Curl Virus Control (\u091f\u092e\u093e\u091f\u0930 \u0915\u0940 \u0916\u0947\u0924\u0940 \u0935 \u092e\u0930\u094b\u0921\u093c\u093f\u092f\u093e \u0930\u094b\u0917)",
-        "keywords": ["tomato", "tamatar", "leaf curl", "fruit borer", "staking", "टमाटर", "मरोड़िया", "पत्ती मुड़ना"],
+        "keywords": ["tomato", "tamatar", "leaf curl", "whitefly", "safed makkhi", "tamatar bimari", "tamatar safed makkhi", "fruit borer", "staking", "टमाटर", "मरोड़िया", "पत्ती मुड़ना", "सफेद मक्खी"],
         "summary": "Seed rate 100-150g hybrid/acre. Spray Acetamiprid/Thiamethoxam for whitefly vector causing leaf curl.",
         "response": "🍅 **Tomato Cultivation & Pest Guide (टमाटर की वैज्ञानिक खेती):**\n\n1. **बीज दर व पौधशाला (Seed Rate & Nursery):**\n   • **हाइब्रिड टमाटर:** **100 से 150 ग्राम प्रति एकड़** (अभिनव, यूएस-440, साहो, आर्या)।\n   • 25-30 दिन की पौध को मेड़ों पर बांस-तार के सहारे (Staking विधि) लगाएं।\n\n2. **पत्ती मरोड़ रोग (Leaf Curl Virus / Matha Bandhna):**\n   • यह रोग सफेद मक्खी (Whitefly) द्वारा फैलता है।\n   • **रोकथाम:** **Acetamiprid 20% SP @ 60 ग्राम** या **Thiamethoxam 25% WG @ 80 ग्राम प्रति एकड़** 150 लीटर पानी में स्प्रे करें। खेत में पीले चिपचिपे कार्ड (Yellow Sticky Traps) लगाएं।\n\n3. **फल छेदक सुंडी (Fruit Borer):**\n   • **Flubendiamide 39.35% SC (Fame) @ 50 मिली** या **Chlorantraniliprole (Coragen) @ 60 मिली प्रति एकड़** स्प्रे करें।"
     },
